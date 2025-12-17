@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Panel | Anti-Piracy Placeholders</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+    <style>
+        :root {
+            --primary-color: #0d1117;
+            --secondary-color: <%= settings.accentColor %>;
+            --accent-color: <%= settings.accentColor %>;
+            --accent-color-rgb: <%= accentColorRgb %>;
+            --text-color: #c9d1d9;
+            --title-color: #ffffff;
+            --subtitle-color: #8b949e;
+            --sections-bg-color: #161b22;
+            --sections-subtitle-color: #ffffff;
+            --footer-bg-color: #161b22;
+            --button-discord-color: #7289da;
+            --amount-color: <%= settings.accentColor %>;
+            --position-color: #8b949e;
+            --input-background: #21262d;
+            --input-text-color: #c9d1d9;
+            --label-color: #ffffff;
+            --checkbox-text-color: #c9d1d9;
+            --card-background: #1b1f27;
+            --card-border: #2c313a;
+        }
+
+        html {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .staff-panel {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .title.is-spaced {
+            color: var(--title-color);
+        }
+
+        h1.title {
+            color: var(--title-color) !important;
+        }
+
+        .subtitle {
+            color: var(--subtitle-color);
+        }
+
+        .button.is-info {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .button.is-info:hover,
+        .button.is-info:focus {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            box-shadow: none;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card .card-title {
+            font-size: 1.25rem;
+            color: var(--title-color);
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .divider {
+            margin: 20px 0;
+            height: 1px;
+            background-color: var(--card-border);
+        }
+
+        .textarea {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+        }
+
+        .textarea::placeholder {
+            color: var(--position-color);
+        }
+
+        .input {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+        }
+
+        .input::placeholder {
+            color: var(--position-color);
+        }
+
+        .select select {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+            border-radius: 4px;
+            padding: 5px;
+            font-family: inherit;
+        }
+
+        .select select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        .field.has-addons .control {
+            margin-right: 10px;
+            flex: 1;
+        }
+
+        .label {
+            color: var(--label-color);
+        }
+
+        .checkbox {
+            color: var(--checkbox-text-color);
+        }
+
+        .checkbox input[type="checkbox"]:hover {
+            background-color: transparent;
+            border-color: transparent;
+        }
+
+        .checkbox:hover {
+            background-color: transparent;
+            color: var(--checkbox-text-color);
+        }
+
+        .help.is-info {
+            color: var(--accent-color);
+            font-size: 0.7rem;
+        }
+
+        input[type="file"] {
+            color: var(--text-color);
+            background-color: var(--input-background);
+            border: 1px solid var(--accent-color);
+            border-radius: 4px;
+            padding: 5px;
+            font-family: inherit;
+        }
+
+        input[type="color"] {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            height: 32px;
+            width: 100%;
+            padding: 0;
+        }
+
+        .collapsible-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .collapsible-content.is-active {
+            display: block;
+        }
+
+        .collapsible-toggle {
+            cursor: pointer;
+            color: var(--accent-color);
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .collapsible-toggle i {
+            transition: transform 0.3s ease;
+        }
+
+        .collapsible-toggle.is-active i {
+            transform: rotate(180deg);
+        }
+
+        .card .content p {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .card .content ul {
+            margin-top: 1rem;
+            padding-left: 20px;
+        }
+
+        .card .content p strong {
+            color: var(--accent-color);
+        }
+
+        .card .content ul li {
+            color: var(--accent-color);
+        }
+
+        .card .content ul li code {
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .card .content code {
+            background-color: #21262d;
+            color: #e1e4e8;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .nonce-search {
+            margin-top: 20px;
+        }
+
+        .nonce-result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            color: var(--text-color);
+            display: none; 
+        }
+
+        .nonce-result p {
+            margin-bottom: 0.2rem;
+        }
+
+        .nonce-result p strong {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/navbar', { user, existingUser }) %>
+
+    <div class="staff-panel">
+        <%- include('../partials/staff-navbar', { user, currentPage: 'anti-piracy' }) %>
+
+        <div class="content">
+            <section class="section">
+                <h1 class="title">Anti-Piracy Placeholders</h1>
+                <p class="subtitle">Manage anti-piracy placeholders for products.</p>
+
+                <div class="card">
+                    <div class="card-title">How It Works</div>
+                    <div class="content">
+                        <p>
+                            Anti-piracy placeholders are a powerful tool designed to deter unauthorized distribution of your products. 
+                            When enabled, specific placeholders are embedded within your original files before they are uploaded to the store. 
+                            These placeholders are automatically customized for each user when they download the files, allowing you to track 
+                            and identify any unauthorized distribution.
+                        </p>
+                        <p>
+                            Below is a list of available placeholders that can be used in your product files. These placeholders will be replaced 
+                            with actual data when the user downloads the product, enabling you to track and trace any unauthorized use.
+                        </p>
+                        <p><strong>Available Placeholders:</strong></p>
+                        <ul>
+                            <li><code><%= '%%__USER__%%' %></code> - Inserts the downloader's Discord user ID.</li>
+                            <li><code><%= '%%__PRODUCT__%%' %></code> - Inserts the name of the product being downloaded.</li>
+                            <li><code><%= '%%__NONCE__%%' %></code> - Inserts a unique hash generated for each download. This hash is used to track the user 
+                            who downloaded the product, ensuring authenticity and security.</li>
+                            <li><code><%= '%%__PLEXSTORE__%%' %></code> - Indicates if the product was downloaded through Plex Store. This placeholder will 
+                            return 'true' for all downloads made through the store.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <form action="/staff/anti-piracy?_csrf=<%= encodeURIComponent(csrfToken) %>" method="POST">
+                    
+                    <div class="card">
+                        <div class="card-title">Anti-Piracy Settings</div>
+
+                        <div class="field">
+                            <label class="checkbox">
+                                <input type="checkbox" name="antiPiracyEnabled" value="true" <% if (settings.antiPiracyEnabled) { %>checked<% } %> >
+                                Enable Anti-Piracy placeholder injection
+                            </label>
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <button type="submit" class="button is-info">Save Anti-Piracy Settings</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Nonce Search Form -->
+                <div class="card nonce-search">
+                    <div class="card-title">Find Download by Nonce</div>
+                    <form id="nonce-search-form">
+                        <div class="field has-addons">
+                            <div class="control">
+                                <input class="input" type="text" name="nonce" id="nonce-input" placeholder="Enter Nonce ID" required>
+                            </div>
+                            <div class="control">
+                                <button type="submit" class="button is-info">Find</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Nonce Search Result -->
+                <div id="nonce-result" class="nonce-result"></div>
+
+            </section>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+    <script>
+document.getElementById('nonce-search-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const nonce = document.getElementById('nonce-input').value;
+
+    if (nonce.trim() === '') {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/staff/anti-piracy/find?nonce=${encodeURIComponent(nonce)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        
+        let html = '';
+        if (data && data.downloadInfo) {
+            html = `
+                <p><strong>Product Name:</strong> ${data.downloadInfo.productName}</p>
+                <p><strong>Discord User:</strong> ${data.downloadInfo.discordUsername} (${data.downloadInfo.discordUserId})</p>
+                <p><strong>Nonce:</strong> ${data.downloadInfo.nonce}</p>
+                <p><strong>Download Date:</strong> ${new Date(data.downloadInfo.downloadDate).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName: 'short' })}</p>
+            `;
+        } else {
+            html = '<p>No results found for the provided nonce.</p>';
+        }
+
+        const nonceResultDiv = document.getElementById('nonce-result');
+        nonceResultDiv.innerHTML = html;
+        nonceResultDiv.style.display = 'block'; // Show the result div when there's content
+
+    } catch (error) {
+        console.error('Error fetching nonce data:', error);
+        document.getElementById('nonce-result').innerHTML = `<p>Error fetching data. Please try again later.</p>`;
+        document.getElementById('nonce-result').style.display = 'block'; // Show the result div even on error
+    }
+});
+    </script>
+</body>
+
+</html>

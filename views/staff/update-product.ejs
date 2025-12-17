@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Panel | Update Product</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+    <style>
+        :root {
+            --primary-color: #0d1117;
+            --secondary-color: <%= settings.accentColor %>;
+            --accent-color: <%= settings.accentColor %>;
+            --accent-color-rgb: <%= accentColorRgb %>;
+            --text-color: #c9d1d9;
+            --placeholder-color: #8b949e;
+            --title-color: #ffffff;
+            --subtitle-color: #c9d1d9;
+            --sections-bg-color: #161b22;
+            --sections-subtitle-color: #ffffff;
+            --footer-bg-color: #161b22;
+            --button-discord-color: #7289da;
+            --amount-color: <%= settings.accentColor %>;
+            --textarea-placeholder-font: monospace;
+            --textarea-placeholder-size: 0.9rem;
+            --input-background: #21262d;
+            --input-text-color: #c9d1d9;
+            --label-color: #ffffff;
+            --checkbox-text-color: #c9d1d9;
+            --card-background: #1b1f27;
+            --card-border: #2c313a;
+        }
+
+        html {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .staff-panel {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .title.is-spaced {
+            color: var(--title-color);
+        }
+
+        h1.title {
+            color: var(--title-color) !important;
+        }
+
+        .subtitle {
+            color: var(--subtitle-color);
+        }
+
+        .label {
+            color: var(--label-color);
+        }
+
+        .help.is-info {
+            color: var(--accent-color);
+            font-size: 0.7rem;
+        }
+
+        .button.is-info {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .button.is-info:hover,
+        .button.is-info:focus {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            box-shadow: none;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card .card-title {
+            font-size: 1.25rem;
+            color: var(--title-color);
+            margin-bottom: 15px;
+        }
+
+        .divider {
+            margin: 20px 0;
+            height: 1px;
+            background-color: var(--card-border);
+        }
+
+        .textarea {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+        }
+
+        .textarea::placeholder {
+            color: var(--position-color);
+        }
+
+        .input {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+        }
+
+        .input::placeholder {
+            color: var(--position-color);
+        }
+
+        .select select {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+            border-radius: 4px;
+            padding: 5px;
+            font-family: inherit;
+        }
+
+        .select select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        .field.is-grouped-centered .control {
+            text-align: center;
+        }
+
+        .field.is-grouped-centered {
+            justify-content: center;
+        }
+
+        .url-example {
+            font-size: 0.9rem;
+            color: var(--placeholder-color);
+            margin-top: 5px;
+        }
+
+        #price-field.hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/navbar', { user, existingUser }) %>
+
+    <div class="staff-panel">
+        <%- include('../partials/staff-navbar', { user, currentPage: 'products' }) %>
+
+        <div class="content">
+            <section class="section">
+                <h1 class="title">Update Product (<%= product.name %>)</h1>
+                <p class="subtitle">Add a new version, changelog, and product file.</p>
+
+                <form id="productForm" action="/staff/products/update/<%= product._id %>?_csrf=<%= encodeURIComponent(csrfToken) %>" method="POST" enctype="multipart/form-data">
+                    <div class="columns is-centered">
+                        <div class="column is-6">
+                            <div class="card">
+                                <div class="card-title">New Version Details</div>
+
+                                <div class="field">
+                                    <label class="label">Version Number</label>
+                                    <div class="control">
+                                        <input class="input" type="text" name="version" placeholder="e.g., 1.0.1" required>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Changelog</label>
+                                    <p class="help is-info">Supports Markdown</p>
+                                    <div class="control">
+                                        <textarea class="textarea" name="changelog" placeholder="Describe the changes in this version" required></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Upload New Product File</label>
+                                    <div class="control">
+                                        <input class="input" type="file" name="productFile" accept="application/zip,application/octet-stream,application/x-zip-compressed,multipart/x-zip" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                            <button type="submit" class="button is-info">Update Product</button>
+                        </div>
+                        <div class="control">
+                            <a href="/staff/products" class="button is-light">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+</body>
+
+</html>

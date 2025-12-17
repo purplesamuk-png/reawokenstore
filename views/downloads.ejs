@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= product.name %> - Downloads</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+
+    <meta property="og:title" content="<%= product.name %> Download | <%= settings.storeName %>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<%= settings.baseURL %>" />
+    <meta property="og:image" content="<%= settings.logoPath %>" />
+    <meta property="og:description" content="Download and view products" />
+    <meta name="theme-color" content="<%= settings.accentColor %>">
+    <meta property="og:site_name" content="<%= settings.storeName %>" />
+    <meta property="og:locale" content="en_US" />
+
+    <style>
+        :root {
+            --primary-color: #0d1117;
+            --secondary-color: <%= settings.accentColor %>;
+            --accent-color: <%= settings.accentColor %>;
+            --accent-color-rgb: <%= accentColorRgb %>;
+            --text-color: #c9d1d9;
+            --title-color: #ffffff;
+            --subtitle-color: #8b949e;
+            --sections-bg-color: #161b22;
+            --sections-subtitle-color: #768390;
+            --footer-bg-color: #161b22;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --padding: 20px;
+        }
+
+        html {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .hero.is-medium {
+            position: relative;
+            background: url('<%= settings.backgroundImagePath %>') no-repeat center center fixed;
+            background-size: cover;
+            border-bottom: 2px solid <%= settings.accentColor %>;
+            z-index: 1;
+            min-height: 40vh;
+        }
+
+        .hero-body {
+            position: relative;
+            z-index: 2;
+            height: 40vh;
+        }
+
+        .hero-body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: -1;
+            filter: blur(3px);
+        }
+
+        .title.is-spaced {
+            color: var(--title-color);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            color: var(--subtitle-color);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .section {
+            padding-bottom: 50px;
+        }
+
+        .markdown-body {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+
+        .markdown-body h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--title-color);
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--title-color);
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body h3 {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: var(--title-color);
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body h4 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--title-color);
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body p {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var (--text-color);
+        }
+
+        .markdown-body a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+
+        .markdown-body ul, .markdown-body ol {
+            padding-left: 20px;
+            margin-bottom: 1rem;
+            list-style-type: disc;
+        }
+
+        .markdown-body strong, .markdown-body b {
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .markdown-body code {
+            background-color: #161b22;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .markdown-body pre {
+            background-color: #161b22;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body blockquote {
+            padding: 10px 20px;
+            margin: 0 0 20px;
+            background-color: #161b22;
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body th, .markdown-body td {
+            padding: 10px;
+            border: 1px solid #c9d1d9;
+        }
+
+        .markdown-body th {
+            background-color: #161b22;
+        }
+
+        .markdown-body td {
+            background-color: var(--primary-color);
+        }
+
+        .markdown-body .info, .markdown-body .success, .markdown-body .warning, .markdown-body .danger {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        .markdown-body .info {
+            background-color: #017acd;
+        }
+
+        .markdown-body .success {
+            background-color: #28a745;
+        }
+
+        .markdown-body .warning {
+            background-color: #d39e00;
+        }
+
+        .markdown-body .danger {
+            background-color: #dc3545;
+        }
+
+        .download-section {
+            margin-top: 30px;
+        }
+
+        .download-count {
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+            color: var(--subtitle-color);
+        }
+
+        .download-count i {
+            margin-right: 5px;
+            color: var(--secondary-color);
+        }
+
+        .version-card {
+            background-color: var(--sections-bg-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            border: 2px solid var(--accent-color);
+        }
+
+        .version-card h3 {
+            color: var(--title-color);
+            margin-bottom: 10px;
+        }
+
+        .version-card p {
+            color: var(--subtitle-color);
+            margin-bottom: 15px;
+        }
+
+        .button.is-download {
+            background-color: #17a2b8;
+            margin-bottom: 0.2rem;
+            border-color: #17a2b8;
+            color: #fff;
+            transition: filter 0.3s ease;
+        }
+
+        .button.is-download:hover,
+        .button.is-download:focus {
+            background-color: #17a2b8;
+            filter: brightness(0.9);
+        }
+
+      .button.is-danger {
+        background-color: #ED4245;
+        color: white;
+        border: none;
+        transition: filter 0.3s ease;
+    }
+
+    .button.is-danger:hover,
+    .button.is-danger:focus {
+      background-color: #ED4245;
+      color: white;
+      filter: brightness(0.9);
+    }
+
+    </style>
+</head>
+
+<body>
+    <%- include('partials/navbar', { user, existingUser }) %>
+
+    <section class="hero is-medium is-fullheight-with-navbar" style="
+    <% if (typeof settings.backgroundGradient === 'undefined' || settings.backgroundGradient) { %>
+        background: linear-gradient(
+            180deg,
+            rgba(var(--accent-color-rgb), 0.6) 0%, 
+            rgba(var(--accent-color-rgb), 0.4) 40%, 
+            rgba(var(--accent-color-rgb), 0.3) 80%, 
+            rgba(var(--accent-color-rgb), 0.2) 100%
+        );
+    <% } else { %>
+        background: url('<%= settings.backgroundImagePath %>') no-repeat center center fixed;
+        background-size: cover;
+    <% } %>
+">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title is-spaced">
+                    <%= product.name %> Downloads
+                </h1>
+                <h2 class="subtitle">
+                    Explore and download different versions of <%= product.name %>.
+                </h2>
+            </div>
+        </div>
+    </section>
+
+    <section id="download-section" class="section">
+        <div class="container">
+            <% if (product.versions.length === 0) { %>
+                <p class="has-text-centered" style="color: var(--subtitle-color); margin-bottom: 200px;">
+                    No versions available for download.
+                </p>
+            <% } else { %>
+                <% product.versions.forEach(version => { %>
+                    <div class="version-card">
+                        <div class="download-count" style="position: absolute; top: 20px; right: 20px;">
+                            <i class="fas fa-download"></i>
+                            <span><%= version.downloadCount || 0 %></span>
+                        </div>
+                        <h3 style="display: flex; align-items: center;">
+                            <%= version.version %>
+                            <% if (product.versions[0]._id.toString() === version._id.toString()) { %>
+                                <span style="background-color: var(--accent-color); color: #fff; border-radius: 12px; padding: 5px 10px; font-size: 0.9rem; font-weight: bold; margin-left: 10px; text-transform: uppercase;">
+                                    Latest
+                                </span>
+                            <% } %>
+                        </h3>
+                        <p><%= version.releaseDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+                        <% if (version.changelog && version.changelog.trim() !== '') { %>
+                        <div class="markdown-body">
+                            <%- md.render(version.changelog) %>
+                        </div>
+                        <br>
+                        <% } %>
+                        <a href="/downloads/<%= product.urlId %>/download/<%= version._id %>" class="button is-download">
+                            <i class="fas fa-download"></i>&nbsp;Download
+                        </a>
+                        <% if (isStaff) { %>
+                        <form action="/downloads/<%= product.urlId %>/delete/<%= version._id %>" method="POST" style="margin-top:20px;display:inline;">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button type="submit" class="button is-danger">
+                                <i class="fas fa-trash-alt"></i>&nbsp;Delete Version
+                            </button>
+                        </form>
+                        <% } %>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </section>
+    
+    
+
+    <%- include('partials/footer') %>
+</body>
+
+</html>

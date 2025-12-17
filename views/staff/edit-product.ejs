@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Panel | Edit Product</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+    <style>
+        :root {
+            --primary-color: #0d1117;
+            --secondary-color: <%= settings.accentColor %>;
+            --accent-color: <%= settings.accentColor %>;
+            --accent-color-rgb: <%= accentColorRgb %>;
+            --text-color: #c9d1d9;
+            --placeholder-color: #8b949e;
+            --title-color: #ffffff;
+            --subtitle-color: #c9d1d9;
+            --sections-bg-color: #161b22;
+            --sections-subtitle-color: #ffffff;
+            --footer-bg-color: #161b22;
+            --button-discord-color: #7289da;
+            --amount-color: <%= settings.accentColor %>;
+            --textarea-placeholder-font: monospace;
+            --textarea-placeholder-size: 0.9rem;
+            --input-background: #21262d;
+            --input-text-color: #c9d1d9;
+            --label-color: #ffffff;
+            --checkbox-text-color: #c9d1d9;
+            --card-background: #1b1f27;
+            --card-border: #2c313a;
+        }
+
+        html {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .staff-panel {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .title.is-spaced {
+            color: var(--title-color);
+        }
+
+        h1.title {
+            color: var(--title-color) !important;
+        }
+
+        .subtitle {
+            color: var(--subtitle-color);
+        }
+
+        .label {
+            color: var(--label-color);
+        }
+
+        .help.is-info {
+            color: var(--accent-color);
+            font-size: 0.7rem;
+        }
+
+        .button.is-info {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .button.is-info:hover,
+        .button.is-info:focus {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            box-shadow: none;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox {
+            color: var(--checkbox-text-color);
+        }
+
+        .checkbox input[type="checkbox"]:hover {
+            background-color: transparent;
+            border-color: transparent;
+        }
+
+        .checkbox:hover {
+            background-color: transparent;
+            color: var(--checkbox-text-color);
+        }
+
+        .card .card-title {
+            font-size: 1.25rem;
+            color: var(--title-color);
+            margin-bottom: 15px;
+        }
+
+        .divider {
+            margin: 20px 0;
+            height: 1px;
+            background-color: var(--card-border);
+        }
+
+        .textarea {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+        }
+
+        .textarea::placeholder {
+            color: var(--position-color);
+        }
+
+        .input {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+        }
+
+        .input::placeholder {
+            color: var(--position-color);
+        }
+
+        .select select {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+            border-radius: 4px;
+            padding: 5px;
+            font-family: inherit;
+        }
+
+        .select select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        .select.is-multiple select {
+            height: auto;
+            min-height: 200px;
+        }
+
+        .field.is-grouped-centered .control {
+            text-align: center;
+        }
+
+        .field.is-grouped-centered {
+            justify-content: center;
+        }
+
+        .url-example {
+            font-size: 0.9rem;
+            color: var(--placeholder-color);
+            margin-top: 5px;
+        }
+
+        #price-field.hidden {
+            display: none;
+        }
+
+        .hidden {
+        display: none;
+}
+
+        .help.is-info strong {
+            color: var(--accent-color);
+        }
+
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/navbar', { user, existingUser }) %>
+
+    <div class="staff-panel">
+        <%- include('../partials/staff-navbar', { user, currentPage: 'products' }) %>
+
+        <div class="content">
+            <section class="section">
+                <h1 class="title">Edit Product (<%= product.name %>)</h1>
+                <p class="subtitle">Modify the details for this product.</p>
+
+                <form id="productForm" action="/staff/products/edit/<%= product._id %>?_csrf=<%= encodeURIComponent(csrfToken) %>" method="POST" enctype="multipart/form-data">
+                    <div class="columns">
+                        <div class="column is-8">
+                            <div class="card">
+                                <div class="card-title">Product Information</div>
+
+                                <div class="field">
+                                    <label class="label">Product Name</label>
+                                    <div class="control">
+                                        <input class="input" type="text" name="name" placeholder="Enter product name" value="<%= product.name %>" required>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">URL ID</label>
+                                    <div class="control">
+                                        <input class="input" type="text" name="urlId" id="urlId" placeholder="Enter URL ID" pattern="[a-zA-Z0-9-]+" title="Alphanumeric characters and hyphens only" value="<%= product.urlId %>" required>
+                                        <p class="url-example">Link: <span id="urlExample"></span></p>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Description</label>
+                                    <p class="help is-info">Supports Markdown</p>
+                                    <div class="control">
+                                        <textarea class="textarea" name="description" placeholder="Add your content.
+
+# Heading One
+## Heading Two
+### Heading Three
+                                        
+**Bold text**
+*Italic text*
+~~Strikethrough~~
+                                        
+- List one
+- List two
+                                        
+[URL text](URL)
+                                        
+---
+^ Adds horizontal rule
+                                        
+Code line" required><%= product.description %></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Dependencies (Optional)</label>
+                                    <p class="help is-info">Supports Markdown</p>
+                                    <div class="control">
+                                        <textarea class="textarea" name="dependencies" placeholder="Add your dependencies"><%= product.dependencies || '' %></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="field" id="price-field">
+                                    <label class="label">Price</label>
+                                    <div class="control">
+                                        <input class="input" type="number" name="price" placeholder="Enter product price" step="0.01" value="<%= product.price %>">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Product Category (Optional)</label>
+                                    <div class="control">
+                                        <div class="select">
+                                            <select name="category">
+                                                <option value="" <%= !product.category ? 'selected' : '' %>>Choose a category</option>
+                                                <% settings.productCategories.forEach(category => { %>
+                                                    <option value="<%= category.url %>" <%= product.category === category.url ? 'selected' : '' %>><%= category.name %></option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Product Type</label>
+                                    <div class="control">
+                                        <div class="select">
+                                            <select name="productType" id="productType" required>
+                                                <option value="digitalPaid" <%= product.productType === 'digitalPaid' ? 'selected' : '' %>>Digital Paid</option>
+                                                <option value="digitalFree" <%= product.productType === 'digitalFree' ? 'selected' : '' %>>Digital Free</option>
+                                                <option value="service" <%= product.productType === 'service' ? 'selected' : '' %>>Service</option>
+                                                <option value="serials" <%= product.productType === 'serials' ? 'selected' : '' %>>Serials</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <p class="help is-info" id="productTypeHelp">
+                                        <!-- Explanation will dynamically change based on selection -->
+                                    </p>
+                                </div>
+
+                                <!-- Service Message Field -->
+                                <div class="field hidden" id="serviceMessageField">
+                                    <label class="label">Service Message</label>
+                                    <p class="help is-info">Supports Markdown</p>
+                                    <p class="help is-info">
+                                        Provide the instructions or steps that customers will see after purchasing this service.
+                                    </p>
+                                    <div class="control">
+                                        <textarea class="textarea" name="serviceMessage" placeholder="Enter the message for customers..."><%= product.serviceMessage || '' %></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title">Advanced Settings</div>
+
+                                <div class="field">
+                                    <label class="label">Numerical Position</label>
+                                    <p class="help is-info">This determines the order in which the product appears on the product list. Lower numbers appear first. For example, a product with position 1 will be shown before a product with position 2.</p>
+                                    <div class="control">
+                                        <input class="input" type="number" name="position" placeholder="Enter product position" value="<%= product.position %>" required>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Discord Roles to Assign (Optional)</label>
+                                    <p class="help is-info">
+                                        Select the Discord roles that users will automatically receive when they purchase this product.
+                                        <br>
+                                        <strong>Note:</strong> Hold <kbd>Ctrl</kbd> (or <kbd>Cmd</kbd> on macOS) while clicking to select multiple roles.
+                                        <br>
+                                        <strong>Important:</strong> Only roles below the bot's highest role in the server's hierarchy can be selected.
+                                    </p>
+                                    <div class="control">
+                                        <div class="select is-multiple">
+                                            <select id="discordRoleIds" name="discordRoleIds[]" multiple size="5">
+                                                <% roles.forEach(role => { %>
+                                                    <option value="<%= role.id %>" <%= product.discordRoleIds.includes(role.id) ? 'selected' : '' %>><%= role.name %> (<%= role.id %>)</option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="column is-4">
+                            <div class="card">
+                                <div class="card-title">Upload Files</div>
+
+                                <div class="field">
+                                    <label class="label">Upload Banner Image</label>
+                                    <div class="control">
+                                        <input class="input" type="file" name="bannerImage" accept="image/*">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title">Visibility and Selling Status</div>
+
+                                <div class="field">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="hideProduct" <%= product.hideProduct ? 'checked' : '' %>>
+                                        Hide Product
+                                    </label>
+                                    <p class="help is-info">If enabled, this product will be hidden from the product list and customers won't be able to see it unless they have the link.</p>
+                                </div>
+
+                                <div class="field">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="pauseSelling" <%= product.pauseSelling ? 'checked' : '' %>>
+                                        Pause Product Selling
+                                    </label>
+                                    <p class="help is-info">If enabled, this product will still be visible, but customers won't be able to purchase it.</p>
+                                </div>
+                            </div>
+
+                            <div class="card hidden" id="serialsCard">
+                                <div class="card-title">Serial Keys Management</div>
+                                <div class="field">
+                                    <label class="label">Current Serial Keys</label>
+                                    <p class="help is-info">Remove unwanted keys by deleting them from the list. Add new keys by typing them on new lines.</p>
+                                    <div class="control">
+                                        <textarea class="textarea" name="serialKeys" id="serialKeys" placeholder="Put each serial key on a new line, like this:
+                            
+                            XXXX-YYYY-ZZZZ
+                            AAAA-BBBB-CCCC
+                            1234-5678-9012
+                            
+                            The keys above are just examples. 
+                            Enter your real serial keys in the same format, 
+                            with only ONE key per line." rows="10"><% if (product.serials && product.serials.length > 0) { %><%= product.serials.map(serial => serial.key).join('\n') %><% } %></textarea>
+                                    </div>
+                                    <p class="help is-info">
+                                        <strong>Total Keys:</strong> <span id="serialKeyCount">0</span>
+                                    </p>
+                                </div>
+
+                                <div class="field">
+                                    <div class="control">
+                                        <label class="checkbox" style="color: var(--checkbox-text-color);">
+                                            <input type="checkbox" id="enableFileUpload" name="enableFileUpload" <%= product.serialRequiresFile ? 'checked' : '' %>>
+                                            Enable product file upload
+                                        </label>
+                                        <p class="help is-info">Check this if your serial key requires any additional files such as software, tools, guides, resources, or assets.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                            <button type="submit" class="button is-info">Update Product</button>
+                        </div>
+                        <div class="control">
+                            <a href="/staff/products" class="button is-light">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+    <script>
+
+document.addEventListener('DOMContentLoaded', function () {
+        const productTypeSelect = document.getElementById('productType');
+        const productTypeHelp = document.getElementById('productTypeHelp');
+        const serviceMessageField = document.getElementById('serviceMessageField');
+
+        const productTypeDescriptions = {
+            digitalPaid: "A paid product that includes a downloadable file. Customers will instantly be able to download the file.",
+            digitalFree: "A free product that includes a downloadable file. Customers can download it without payment.",
+            service: "A customizable service where you can define a custom message to guide customers on the next steps after purchase."
+        };
+
+        function updateProductTypeHelp() {
+    const selectedType = productTypeSelect.value;
+    console.log('Selected Product Type:', selectedType);
+
+    productTypeHelp.textContent = productTypeDescriptions[selectedType];
+
+    if (selectedType === 'service') {
+        serviceMessageField.classList.remove('hidden');
+        serviceMessageField.querySelector('textarea').setAttribute('required', 'required');
+        serialsCard.classList.add('hidden');
+        serialKeys.removeAttribute('required');
+    } else if (selectedType === 'serials') {
+        serviceMessageField.classList.add('hidden');
+        serviceMessageField.querySelector('textarea').removeAttribute('required');
+        serialsCard.classList.remove('hidden');
+        serialKeys.removeAttribute('required');
+    } else {
+        serviceMessageField.classList.add('hidden');
+        serviceMessageField.querySelector('textarea').removeAttribute('required');
+        serialsCard.classList.add('hidden');
+        serialKeys.removeAttribute('required');
+    }
+}
+
+    function updateSerialKeyCount() {
+        const keys = serialKeys.value.split('\n').filter(key => key.trim() !== '').length;
+        serialKeyCount.textContent = keys;
+    }
+
+        productTypeSelect.addEventListener('change', updateProductTypeHelp);
+        serialKeys.addEventListener('input', updateSerialKeyCount);
+
+        updateSerialKeyCount();
+        updateProductTypeHelp();
+    });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlIdInput = document.getElementById('urlId');
+            const urlExample = document.getElementById('urlExample');
+            const bannerImageInput = document.querySelector('input[name="bannerImage"]');
+            const productForm = document.getElementById('productForm');
+
+            function updateUrlExample() {
+                const currentUrl = window.location.origin;
+                const urlIdValue = urlIdInput.value.trim() ? `/products/${urlIdInput.value.trim()}` : '';
+                urlExample.textContent = `${currentUrl}${urlIdValue}`;
+            }
+
+            urlIdInput.addEventListener('input', updateUrlExample);
+
+            bannerImageInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file && !file.type.startsWith('image/')) {
+                    alert('Please upload a valid image file.');
+                    this.value = '';
+                }
+            });
+
+            productForm.addEventListener('submit', function(event) {
+                const file = bannerImageInput.files[0];
+                if (file && !file.type.startsWith('image/')) {
+                    event.preventDefault();
+                    alert('Please upload a valid image file.');
+                }
+            });
+
+            updateUrlExample();
+        });
+
+        document.getElementById('productType').addEventListener('change', function () {
+            const priceField = document.getElementById('price-field');
+            if (this.value === 'digitalFree') {
+                priceField.classList.add('hidden');
+                priceField.querySelector('input').removeAttribute('required');
+            } else {
+                priceField.classList.remove('hidden');
+                priceField.querySelector('input').setAttribute('required', 'required');
+            }
+        });
+
+        document.getElementById('productType').dispatchEvent(new Event('change'));
+    </script>
+</body>
+
+</html>

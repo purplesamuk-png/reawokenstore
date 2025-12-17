@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= settings.seoTitle %></title>
+    <meta name="description" content="<%= settings.seoDescription %>">
+    <meta name="keywords" content="<%= settings.seoTags %>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+    <meta property="og:title" content="<%= settings.seoTitle %>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<%= settings.baseURL %>" />
+    <meta property="og:image" content="<%= settings.logoPath %>" />
+    <meta property="og:description" content="<%= settings.seoDescription %>" />
+    <meta name="theme-color" content="<%= settings.accentColor %>">
+    <meta property="og:site_name" content="<%= settings.storeName %>" />
+    <meta property="og:locale" content="en_US" />
+
+</head>
+<style>
+    :root {
+      --primary-color: #0d1117;
+      --secondary-color: <%= settings.accentColor %>;
+      --accent-color: <%= settings.accentColor %>;
+      --accent-color-rgb: <%= accentColorRgb %>;
+      --text-color: #c9d1d9;
+      --title-color: #ffffff;
+      --subtitle-color: #8b949e;
+      --sections-bg-color: #161b22;
+    }
+
+    html, body {
+      background-color: var(--primary-color);
+      scroll-behavior: smooth;
+      margin: 0;
+      padding: 0;
+    }
+
+    .hero {
+    position: relative;
+    height: 80vh !important;
+    background: url('<%= settings.backgroundImagePath %>') no-repeat center center fixed;
+    background-size: cover;
+    border-bottom: 2px solid <%= settings.accentColor %>;
+    margin: 0;
+    z-index: 1;
+    padding: 0;
+    overflow: hidden;
+}
+
+.hero-body {
+position: relative;
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 1;
+padding: 40px 20px;
+}
+
+.hero-body::before {
+content: '';
+position: absolute;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;
+background: rgba(0, 0, 0, 0.2);
+z-index: -1;
+}
+
+
+
+    .hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 20px;
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+    
+.hero-logo {
+  width: 150px;
+  height: auto;
+  margin-bottom: 20px;
+  animation: fadeInUp 0.7s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.hero .title {
+  font-size: 3.5rem;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  font-weight: 800;
+  color: var(--title-color);
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.hero .subtitle {
+  font-size: 1.25rem;
+  margin-top: 1rem;
+  color: var(--subtitle-color);
+  animation: fadeInUp 0.9s ease-out forwards;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translateY(20px);
+}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.buttons {
+  animation: fadeInUp 1s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+    .buttons .button {
+  margin-top: 1rem;
+  border-radius: 40px;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.buttons .shop-now {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--accent-color-rgb), 0.9) 0%,
+    rgba(var(--accent-color-rgb), 0.7) 50%,
+    rgba(var(--accent-color-rgb), 0.5) 100%
+  );
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.buttons .join-discord {
+  background: transparent;
+  border: 2px solid var(--accent-color);
+  color: var(--accent-color);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.buttons .shop-now:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(var(--accent-color-rgb), 0.3), 0 2px 4px rgba(0, 0, 0, 0.1);
+  filter: brightness(1.05);
+  transition: all 0.2s ease;
+}
+
+.buttons .join-discord:hover {
+  background: var(--accent-color);
+  color: var(--primary-color);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(var(--accent-color-rgb), 0.3), 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .scroll-down-arrow {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  color: var(--accent-color);
+  animation: bounce 2s infinite;
+  transition: transform 0.3s ease, opacity 0.3s ease; 
+  }
+
+  .scroll-down-arrow:hover {
+    color: var(--accent-color);
+    filter: brightness(0.9);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  color: inherit;
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translate(-50%, 0);
+      }
+      50% {
+        transform: translate(-50%, 10px);
+      }
+    }
+    .feature-card-modern {
+  text-align: center;
+  padding: 30px;
+  background: linear-gradient(135deg, var(--primary-color), var(--sections-bg-color));
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid var(--accent-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.feature-card-modern:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.icon-container {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 15px;
+  background: var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+}
+
+.icon-container i {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  transition: color 0.3s ease;
+}
+
+.feature-card-modern:hover .icon-container {
+  transform: scale(1.1);
+  background: var(--accent-color);
+}
+
+.feature-card-modern:hover .icon-container i {
+  color: #ffffff;
+}
+
+@media screen and (max-width: 768px) {
+  .feature-card-modern {
+    margin-bottom: 20px;
+  }
+  
+}
+
+    .about-us-content {
+      background: linear-gradient(135deg, var(--sections-bg-color), var(--primary-color));
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      border: 2px solid var(--accent-color);
+    }
+
+    #about-us .container {
+  padding: 0 15px;
+}
+
+    @media screen and (max-width: 768px) {
+      .hero {
+        height: 80vh;
+      }
+
+      .hero .title {
+        font-size: 2.5rem;
+      }
+
+      .hero .subtitle {
+        font-size: 1rem;
+      }
+
+      .hero-logo {
+        width: 120px;
+      }
+
+      .buttons .button {
+        font-size: 1rem;
+        padding: 10px 30px;
+      }
+
+      .feature-card-modern {
+        padding: 20px;
+      }
+
+      .scroll-down-arrow {
+        bottom: 10px;
+        font-size: 1.5rem;
+      }
+
+      .about-us-content {
+        padding: 20px;
+      }
+
+      .review-box {
+        margin: 10px;
+        padding: 20px;
+    }
+    .review-box .content {
+        font-size: 0.9rem;
+    }
+
+    }
+
+    @media screen and (min-width: 1200px) {
+  .hero {
+    height: 75vh;
+  }
+
+  .hero .title {
+    font-size: 3.5rem;
+  }
+
+  .hero .subtitle {
+    font-size: 1.2rem;
+  }
+
+  .hero-logo {
+    width: 150px;
+  }
+
+  .buttons .button {
+    font-size: 1.1rem;
+    padding: 15px 40px;
+  }
+
+  .scroll-down-arrow {
+    font-size: 1.5rem;
+  }
+
+  h3.title.has-text-centered {
+    font-size: 2rem;
+  }
+
+        .title.is-spaced {
+            color: var(--title-color);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            color: var(--subtitle-color);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+  .feature-card-modern .title {
+    font-size: 1.5rem; 
+  }
+
+  .feature-card-modern .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .about-us-content {
+    font-size: 1rem;
+  }
+}
+
+#reviews .title {
+    color: var(--title-color);
+    font-weight: bold;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.review-box {
+    background: linear-gradient(135deg, var(--primary-color), var(--sections-bg-color));
+    color: var(--text-color);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border-radius: 15px;
+    padding: 25px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--accent-color);
+}
+
+.review-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); 
+}
+
+.review-box .icon {
+    color: var(--accent-color);
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.review-box .content {
+    color: var(--text-color);
+    font-size: 1rem;
+    line-height: 1.5;
+    flex-grow: 1;
+    margin-top: 10px;
+}
+
+.review-box .rating {
+    color: var(--accent-color);
+    margin-top: 5px;
+    font-size: 1.2rem;
+}
+
+.review-box .media-left {
+    margin-right: 15px;
+}
+
+.media-left .image img {
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border: 2px solid var(--accent-color);
+    transition: transform 0.3s ease;
+}
+
+.media-left .image img:hover {
+    transform: scale(1.1);
+}
+
+.review-box .media-content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.review-box .media-content .title {
+    font-size: 1.2rem;
+    color: var(--title-color);
+    font-weight: bold;
+}
+
+.review-box .media-content .subtitle {
+    font-size: 1rem;
+    color: var(--subtitle-color);
+}
+
+.stat-card-modern {
+  background: linear-gradient(135deg, var(--primary-color), var(--sections-bg-color));
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 2px solid var(--accent-color);
+}
+
+#statistics .container {
+  padding: 0 15px;
+}
+
+.stat-card-modern:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.stat-card-modern .icon-container {
+  background: var(--accent-color);
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+}
+
+.stat-card-modern .icon-container i {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  transition: color 0.3s ease;
+}
+
+.stat-card-modern:hover .icon-container {
+  transform: scale(1.1);
+  background: var(--accent-color);
+}
+
+.stat-card-modern:hover .icon-container i {
+  color: #ffffff;
+}
+
+.has-text-accent {
+color: var(--accent-color);
+}
+
+.has-text-sections-subtitle {
+color: var(--sections-subtitle-color);
+}
+
+.has-text-title {
+color: var(--title-color);
+}
+
+    .section-title-underline::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 4px;
+        background-color: var(--accent-color);
+        margin: 10px auto 0;
+    }
+
+.markdown-body {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--text-color);
+    }
+
+    .markdown-body h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--title-color);
+        margin-bottom: 1rem;
+    }
+
+    .markdown-body h2 {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--title-color);
+        margin-bottom: 1rem;
+    }
+
+    .markdown-body h3 {
+        font-size: 1.75rem;
+        font-weight: bold;
+        color: var(--title-color);
+        margin-bottom: 1rem;
+    }
+
+    .markdown-body h4 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--title-color);
+        margin-bottom: 1rem;
+    }
+
+    .markdown-body p {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        color: var (--text-color);
+    }
+
+    .markdown-body a {
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+
+    .markdown-body a:hover {
+        text-decoration: underline;
+    }
+
+    .markdown-body ul, .markdown-body ol {
+        padding-left: 20px;
+        margin-bottom: 1rem;
+        list-style-type: disc;
+    }
+    .markdown-body strong, .markdown-body b {
+        font-weight: bold;
+        color: var(--accent-color);
+    }
+
+    .markdown-body code {
+        background-color: #161b22;
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: monospace;
+    }
+
+    .markdown-body pre {
+        background-color: #161b22;
+        padding: 10px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin-bottom: 1rem;
+    }
+
+    .markdown-body blockquote {
+        padding: 10px 20px;
+        margin: 0 0 20px;
+        background-color: #161b22;
+        border-left: 5px solid var(--accent-color);
+    }
+
+    .markdown-body table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+    }
+
+    .markdown-body th, .markdown-body td {
+        padding: 10px;
+        border: 1px solid #c9d1d9;
+    }
+
+    .markdown-body th {
+        background-color: #161b22;
+    }
+
+    .markdown-body td {
+        background-color: var(--primary-color);
+    }
+
+    .markdown-body .info, .markdown-body .success, .markdown-body .warning, .markdown-body .danger {
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        color: #fff;
+    }
+
+    .markdown-body .info {
+        background-color: #017acd;
+    }
+
+    .markdown-body .success {
+        background-color: #28a745;
+    }
+
+    .markdown-body .warning {
+        background-color: #d39e00;
+    }
+
+    .markdown-body .danger {
+        background-color: #dc3545;
+    }
+
+  </style>
+
+</head>
+<body>
+<%- include('partials/navbar', { user, existingUser }) %>
+
+<section class="hero" style="
+    <% if (typeof settings.backgroundGradient === 'undefined' || settings.backgroundGradient) { %>
+        background: linear-gradient(
+    180deg,
+    rgba(var(--accent-color-rgb), 0.8) 0%, 
+    rgba(var(--accent-color-rgb), 0.75) 30%, 
+    rgba(var(--accent-color-rgb), 0.6) 60%, 
+    rgba(var(--accent-color-rgb), 0.45) 90%, 
+    rgba(var(--accent-color-rgb), 0.3) 100%
+);
+    <% } else { %>
+        background: url('<%= settings.backgroundImagePath %>') no-repeat center center fixed;
+        background-size: cover;
+    <% } %>
+    position: relative;
+">
+<% if (typeof settings.backgroundGradient !== 'undefined' && settings.backgroundGradient) { %>
+    <div class="hero-overlay" style="
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); 
+    mix-blend-mode: multiply; 
+    z-index: 1;">
+</div>
+<% } %>
+  <div class="hero-body">
+    <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
+      <img src="<%= settings.logoPath %>" alt="Logo" class="hero-logo">
+      <h1 class="title"><%= settings.homePageTitle %></h1>
+      <p class="subtitle"><%= settings.homePageSubtitle %></p>
+      <div class="buttons is-centered">
+        <a href="/products" class="button shop-now">
+          <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+          <span>Shop Now</span>
+        </a>
+        <a href="<%= settings.discordInviteLink %>" class="button join-discord">
+          <span class="icon"><i class="fab fa-discord"></i></span>
+          <span>Join Discord</span>
+        </a>
+      </div>
+    </div>
+    <a href="#features-overview" class="scroll-down-arrow">
+      <i class="fas fa-chevron-down"></i>
+    </a>
+  </div>
+</section>
+
+
+<% if (settings.displayFeatures) { %>
+<section id="features-overview" class="section" style="background-color: var(--sections-bg-color);">
+  <div class="container">
+      <h3 class="title has-text-centered section-title-underline" 
+          style="color: var(--title-color); font-size: 2.5rem; font-weight: 800;" 
+          data-aos="fade-down" 
+          data-aos-duration="1000">
+          Why Choose Us?
+      </h3>
+      <p class="has-text-centered subtitle" 
+         style="color: var(--subtitle-color); font-size: 1.2rem; max-width: 700px; margin: 0 auto; margin-bottom: 40px;" 
+         data-aos="fade-down" 
+         data-aos-duration="1200">
+          Discover the key features that make us stand out from the rest.
+      </p>
+      
+      <!-- Feature Cards -->
+      <div class="columns is-multiline">
+          <% settings.features.forEach(function(feature) { %>
+          <div class="column is-one-third-desktop is-half-tablet is-full-mobile">
+              <div class="card feature-card-modern" data-aos="fade-up" data-aos-duration="1000">
+                  <div class="card-content has-text-centered">
+                      <div class="icon-container">
+                          <i class="<%= feature.icon %>"></i>
+                      </div>
+                      <p class="title is-4" style="color: var(--title-color); font-weight: 700; margin-top: 20px;">
+                          <%= feature.title %>
+                      </p>
+                      <p class="subtitle" style="color: var(--subtitle-color); font-size: 1rem; margin-top: 10px;">
+                          <%= feature.description %>
+                      </p>
+                  </div>
+              </div>
+          </div>
+          <% }); %>
+      </div>
+  </div>
+</section>
+<% } %>
+
+
+<% if (settings.displayReviews) { %>
+<section id="reviews" class="section" style="background-color: var(--sections-bg-color); padding: 60px 0;">
+  <div class="container">
+      <h3 class="title has-text-centered section-title-underline" 
+          style="color: var(--title-color); font-size: 2.5rem; font-weight: 800;" 
+          data-aos="fade-down" 
+          data-aos-duration="1000">
+          Customer Reviews
+      </h3>
+      <p class="has-text-centered subtitle" 
+         style="color: var(--subtitle-color); font-size: 1.2rem; max-width: 700px; margin: 0 auto; margin-bottom: 40px;" 
+         data-aos="fade-down" 
+         data-aos-duration="1200">
+          Over <span style="color: var(--accent-color); font-weight: bold;"><%= totalUsers.toLocaleString('en-US') %>+</span> users trust us to deliver top-quality products.
+      </p>
+
+      <!-- Review Cards -->
+      <% if (reviews.length === 0) { %>
+          <p class="has-text-centered" style="color: var(--text-color); font-size: 1.1rem;">No reviews found.</p>
+      <% } else { %>
+          <div class="columns is-multiline">
+              <% reviews.forEach(review => { %>
+              <div class="column is-one-third">
+                  <div class="box review-box">
+                      <article class="media">
+                          <div class="media-left">
+                              <figure class="image is-64x64">
+                                  <img src="<%= review.discordAvatar %>" alt="<%= review.discordUsername %>'s Avatar">
+                              </figure>
+                          </div>
+                          <div class="media-content">
+                              <div class="content">
+                                  <p>
+                                      <strong class="has-text-title"><%= review.discordUsername %></strong>
+                                      <br>
+                                      <span class="rating">
+                                          <% for (let i = 0; i < review.rating; i++) { %>
+                                              <i class="fas fa-star"></i>
+                                          <% } %>
+                                          <% for (let i = review.rating; i < 5; i++) { %>
+                                              <i class="far fa-star"></i>
+                                          <% } %>
+                                      </span>
+                                      <br>
+                                      "<%= review.comment %>"
+                                  </p>
+                              </div>
+                          </div>
+                      </article>
+                  </div>
+              </div>
+              <% }) %>
+          </div>
+      <% } %>
+  </div>
+</section>
+<% } %>
+
+<% if (settings.aboutUsVisible && settings.aboutUsText && settings.aboutUsText.trim()) { %>
+<section id="about-us" class="section" style="background-color: var(--primary-color); padding: 60px 0;">
+  <div class="container">
+    <h3 class="title has-text-centered section-title-underline" style="color: var(--title-color); font-size: 2.5rem; font-weight: 800; margin-bottom: 20px;" data-aos="fade-down" data-aos-duration="1000">About Us</h3>
+    <p class="has-text-centered subtitle" style="color: var(--subtitle-color); font-size: 1.2rem; max-width: 700px; margin: 0 auto; margin-bottom: 40px;" data-aos="fade-down" data-aos-duration="1200">
+      Learn more about who we are, what drives us, and how we strive to deliver excellence.
+    </p>
+    <div class="columns is-centered">
+      <div class="column is-three-quarters" data-aos="fade-up" data-aos-duration="1200">
+        <div class="about-us-content">
+          <div class="content markdown-body" style="color: var(--text-color); font-size: 1.1rem; line-height: 1.8; text-align: center;">
+            <%- md.render(settings.aboutUsText) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (settings.displayStats && stats) { %>
+  <section id="statistics" class="section" style="background-color: var(--sections-bg-color); padding: 60px 0;">
+    <div class="container">
+      <h3 class="title has-text-centered section-title-underline" 
+          style="color: var(--title-color); font-size: 2.5rem; font-weight: 800; margin-bottom: 20px;" 
+          data-aos="fade-down" data-aos-duration="1000">
+        Store Statistics
+      </h3>
+      <p class="has-text-centered subtitle" 
+         style="color: var(--subtitle-color); font-size: 1.2rem; max-width: 700px; margin: 0 auto; margin-bottom: 40px;" 
+         data-aos="fade-down" data-aos-duration="1200">
+        See the numbers behind our success.
+      </p>
+      <div class="columns is-multiline is-centered has-text-centered">
+        <!-- Total Purchases -->
+        <div class="column is-one-third-desktop is-half-tablet" data-aos="fade-up" data-aos-duration="1000">
+          <div class="stat-card-modern">
+            <div class="icon-container">
+              <i class="fas fa-shopping-cart"></i>
+            </div>
+            <p class="title is-4" style="color: var(--title-color); font-weight: 800; margin-top: 15px;">
+              <%= stats.totalPurchases.toLocaleString('en-US') %>
+            </p>
+            <p class="subtitle" style="color: var(--subtitle-color); font-size: 1rem;">Total Purchases</p>
+          </div>
+        </div>
+        <!-- Total Products -->
+        <div class="column is-one-third-desktop is-half-tablet" data-aos="fade-up" data-aos-duration="1200">
+          <div class="stat-card-modern">
+            <div class="icon-container">
+              <i class="fas fa-box-open"></i>
+            </div>
+            <p class="title is-4" style="color: var(--title-color); font-weight: 800; margin-top: 15px;">
+              <%= totalProducts.toLocaleString('en-US') %>
+            </p>
+            <p class="subtitle" style="color: var(--subtitle-color); font-size: 1rem;">Total Products</p>
+          </div>
+        </div>
+        <!-- Site Visits This Month -->
+        <div class="column is-one-third-desktop is-half-tablet" data-aos="fade-up" data-aos-duration="1400">
+          <div class="stat-card-modern">
+            <div class="icon-container">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <p class="title is-4" style="color: var(--title-color); font-weight: 800; margin-top: 15px;">
+              <%= (thisMonthStats.totalSiteVisits + lastMonthStats.totalSiteVisits).toLocaleString('en-US') %>
+            </p>
+            <p class="subtitle" style="color: var(--subtitle-color); font-size: 1rem;">Visits Past 30 Days</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
+  <% if (settings.displayCTABanner) { %>
+  <section id="cta-banner" class="section" style="background: linear-gradient(135deg, var(--accent-color), var(--sections-bg-color)); padding: 60px 0;">
+      <div class="container has-text-centered">
+        <h2 class="title is-3" style="color: var(--title-color); font-weight: 800; margin-bottom: 20px;">
+          Ready to Elevate Your Experience?
+        </h2>
+        <p class="subtitle" style="color: var(--subtitle-color); font-size: 1.2rem; max-width: 700px; margin: 0 auto; margin-bottom: 40px;">
+          Discover the perfect products for your needs. Explore our products today and find the perfect fit for your needs today!
+        </p>
+        <div class="buttons is-centered mt-5">
+          <a class="button is-large" href="/products" style="
+              background: var(--title-color); 
+              color: var(--primary-color); 
+              font-weight: bold; 
+              border-radius: 40px; 
+              padding: 15px 40px; 
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+              transition: transform 0.3s ease, box-shadow 0.3s ease;">
+            <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+            <span>Explore Products</span>
+          </a>
+          <a class="button is-large" href="<%= settings.discordInviteLink %>" style="
+              background: transparent; 
+              border: 2px solid var(--title-color); 
+              color: var(--title-color); 
+              font-weight: bold; 
+              border-radius: 40px; 
+              padding: 15px 40px; 
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+              transition: transform 0.3s ease, box-shadow 0.3s ease;">
+            <span class="icon"><i class="fab fa-discord"></i></span>
+            <span>Join Our Discord</span>
+          </a>
+        </div>
+      </div>
+    </section>
+    <% } %>
+
+    <script>
+        AOS.init();
+      </script>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Panel | Overview</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #0d1117;
+            --accent-color: <%= settings.accentColor %>;
+            --accent-color-rgb: <%= accentColorRgb %>;
+            --text-color: #c9d1d9;
+            --title-color: #ffffff;
+            --subtitle-color: #8b949e;
+            --card-bg-color: #161b22;
+            --positive-color: #28a745;
+            --negative-color: #dc3545;
+            --hover-bg-color: #21262d;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .staff-panel {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        h1.title {
+            color: var(--title-color) !important;
+        }
+
+        .title {
+            color: var(--title-color);
+        }
+
+        .subtitle {
+            color: var(--subtitle-color);
+        }
+
+        .stat-box {
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, background-color 0.3s;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            border: 2px solid var(--accent-color);
+        }
+
+        .stat-box:hover {
+            transform: translateY(-8px);
+            background-color: var(--hover-bg-color);
+        }
+
+        .stat-box .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        .stat-box .stat-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--title-color);
+        }
+
+        .stat-box .stat-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, var(--accent-color), #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+        .stat-box .percentage-change {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.percentage-change.positive {
+    background: rgba(46, 160, 67, 0.1);
+    color: var(--positive-color);
+}
+
+.percentage-change.negative {
+    background: rgba(248, 81, 73, 0.1);
+    color: var(--negative-color);
+}
+
+        .toggle-button {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .toggle-checkbox {
+            display: none;
+        }
+
+        .toggle-label {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background-color: var(--card-bg-color);
+            border-radius: 15px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .toggle-inner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            background-color: var(--hover-bg-color);
+            transition: background-color 0.3s;
+        }
+
+        .toggle-switch {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+
+        .toggle-checkbox:checked + .toggle-label .toggle-switch {
+            transform: translateX(30px);
+        }
+
+        .toggle-text {
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        #lifetime-text {
+            color: var(--subtitle-color);
+        }
+
+        #monthly-text.toggle-active {
+            color: var(--accent-color);
+        }
+
+        #lifetime-text.toggle-active {
+            color: var(--accent-color);
+        }
+
+        .chart-container {
+            background-color: var(--card-bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--box-shadow);
+            margin-top: 20px;
+            border: 2px solid var(--accent-color);
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .custom-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    background-color: var(--card-bg-color);
+    border-radius: 10px;
+    padding: 10px 15px;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.2s, background-color 0.2s;
+    border: 2px solid var(--accent-color);
+}
+
+.list-item:hover {
+    transform: translateY(-5px);
+    background-color: var(--hover-bg-color);
+}
+
+.list-rank {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffffff;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.list-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.list-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.list-value {
+    font-size: 1rem;
+    color: var(--subtitle-color);
+}
+
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/navbar', { user, existingUser }) %>
+
+    <div class="staff-panel">
+        <%- include('../partials/staff-navbar', { user, currentPage: 'overview' }) %>
+
+        <div class="content">
+            <section class="section">
+                <h1 class="title">Overview</h1>
+                <p class="subtitle">Welcome to the staff panel overview. Here you can see statistics, recent activity, and quick links.</p>
+
+                <!-- Toggle for Monthly vs Lifetime Stats -->
+                <div class="toggle-button">
+                    <input type="checkbox" id="toggle-stats" class="toggle-checkbox" onclick="toggleStats()" />
+                    <label for="toggle-stats" class="toggle-label">
+                        <span class="toggle-inner"></span>
+                        <span class="toggle-switch"></span>
+                    </label>
+                    <div class="toggle-text">
+                        <span id="monthly-text" class="toggle-active">Monthly Stats</span>
+                        <span id="lifetime-text">Lifetime Stats</span>
+                    </div>
+                </div>
+
+                <div class="columns is-multiline">
+                    <!-- Stat Box: New Accounts -->
+                    <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop monthly-stat">
+                        <div class="stat-box">
+                            <span class="icon"><i class="fas fa-user-plus"></i></span>
+                            <p class="stat-title">New Accounts (Month)</p>
+                            <p class="stat-value"><%= thisMonthStats.userJoins.toLocaleString('en-US') %></p>
+                            <div class="percentage-change <%= joinsDifference >= 0 ? 'positive' : 'negative' %>">
+                                <%- joinsDifference >= 0 ? '<i class="fas fa-arrow-up"></i>' : '<i class="fas fa-arrow-down"></i>' %>
+                                <%= Math.round(Math.abs(joinsDifference)) %>% 
+                                (<%= lastMonthStats.userJoins.toLocaleString('en-US') %> last month)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop lifetime-stat" style="display:none;">
+                        <div class="stat-box">
+                            <span class="icon"><i class="fas fa-users"></i></span>
+                            <p class="stat-title">New Accounts (Lifetime)</p>
+                            <p class="stat-value"><%= totalUsers.toLocaleString('en-US') %></p>
+                        </div>
+                    </div>
+
+                    <!-- Stat Box: Sales -->
+                    <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop monthly-stat">
+                        <div class="stat-box">
+                            <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+                            <p class="stat-title">Sales (Month)</p>
+                            <p class="stat-value"><%= thisMonthStats.totalPurchases.toLocaleString('en-US') %></p>
+                            <div class="percentage-change <%= salesDifference >= 0 ? 'positive' : 'negative' %>">
+                                <%- salesDifference >= 0 ? '<i class="fas fa-arrow-up"></i>' : '<i class="fas fa-arrow-down"></i>' %>
+                                <%= Math.round(Math.abs(salesDifference)) %>% 
+                                (<%= lastMonthStats.totalPurchases.toLocaleString('en-US') %> last month)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop lifetime-stat" style="display:none;">
+                        <div class="stat-box">
+                            <span class="icon"><i class="fas fa-shopping-bag"></i></span>
+                            <p class="stat-title">Sales (Lifetime)</p>
+                            <p class="stat-value"><%= stats.totalPurchases.toLocaleString('en-US') %></p>
+                        </div>
+                    </div>
+
+                    <!-- Stat Box: Revenue -->
+                    <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop monthly-stat">
+                        <div class="stat-box">
+                            <span class="icon"><i class="fas fa-dollar-sign"></i></span>
+                            <p class="stat-title">Revenue (Month)</p>
+                            <p class="stat-value"><%= settings.currencySymbol %><%= thisMonthStats.totalEarned.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></p>
+                            <div class="percentage-change <%= revenueDifference >= 0 ? 'positive' : 'negative' %>">
+                                <%- revenueDifference >= 0 ? '<i class="fas fa-arrow-up"></i>' : '<i class="fas fa-arrow-down"></i>' %>
+                                <%= Math.round(Math.abs(revenueDifference)) %>% 
+                                (<%= lastMonthStats.totalEarned.toLocaleString('en-US') %> last month)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop lifetime-stat" style="display:none;">
+                        <div class="stat-box">
+                            <span class="icon"><i class="fas fa-coins"></i></span>
+                            <p class="stat-title">Revenue (Lifetime)</p>
+                            <p class="stat-value"><%= settings.currencySymbol %><%= stats.totalEarned.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></p>
+                        </div>
+                    </div>
+
+                    <!-- Stat Box: Site Visits -->
+                    <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop monthly-stat">
+                        <div class="stat-box">
+                            <span class="icon"><i class="fas fa-chart-line"></i></span>
+                            <p class="stat-title">Site Visits (Month)</p>
+                            <p class="stat-value"><%= thisMonthStats.totalSiteVisits.toLocaleString('en-US') %></p>
+                            <div class="percentage-change <%= visitsDifference >= 0 ? 'positive' : 'negative' %>">
+                                <%- visitsDifference >= 0 ? '<i class="fas fa-arrow-up"></i>' : '<i class="fas fa-arrow-down"></i>' %>
+                                <%= Math.round(Math.abs(visitsDifference)) %>% 
+                                (<%= lastMonthStats.totalSiteVisits.toLocaleString('en-US') %> last month)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop lifetime-stat" style="display:none;">
+                        <div class="stat-box">
+                            <span class="icon"><i class="fas fa-eye"></i></span>
+                            <p class="stat-title">Site Visits (Lifetime)</p>
+                            <p class="stat-value"><%= stats.totalSiteVisits.toLocaleString('en-US') %></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="chart-container" style="height: 400px; max-width: 100%; padding-bottom: 20px;">
+                <h2 class="title is-4" style="color: var(--accent-color); text-align: center;">Monthly Statistics</h2>
+                <canvas id="statsChart"></canvas>
+            </div>
+
+            <section class="section">
+                <div class="columns">
+                    <!-- Top Users -->
+                    <div class="column">
+                        <h3 class="subtitle is-5" style="color: var(--title-color);">Top Users by Total Spent</h3>
+                        <div class="custom-list">
+                            <% topUsers.forEach((user, index) => { %>
+                                <div class="list-item">
+                                    <div class="list-rank" style="background-color: var(--accent-color);">
+                                        <span>#<%= index + 1 %></span>
+                                    </div>
+                                    <div class="list-content">
+                                        <span class="list-title"><%= user.discordUsername %></span>
+                                        <span class="list-value"><%= settings.currencySymbol %><%= user.totalSpent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></span>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+            
+                    <!-- Best-Selling Products -->
+                    <div class="column">
+                        <h3 class="subtitle is-5" style="color: var(--title-color);">Best-Selling Products</h3>
+                        <div class="custom-list">
+                            <% topProducts.forEach((product, index) => { %>
+                                <div class="list-item">
+                                    <div class="list-rank" style="background-color: var(--accent-color);">
+                                        <span>#<%= index + 1 %></span>
+                                    </div>
+                                    <div class="list-content">
+                                        <span class="list-title"><%= product.name %></span>
+                                        <span class="list-value"><%= product.totalPurchases.toLocaleString('en-US') %> Purchases</span>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+    <script>
+        function toggleStats() {
+            const monthlyText = document.getElementById('monthly-text');
+            const lifetimeText = document.getElementById('lifetime-text');
+
+            if (document.getElementById('toggle-stats').checked) {
+                monthlyText.classList.remove('toggle-active');
+                lifetimeText.classList.add('toggle-active');
+                document.querySelectorAll('.monthly-stat').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.lifetime-stat').forEach(el => el.style.display = 'block');
+            } else {
+                lifetimeText.classList.remove('toggle-active');
+                monthlyText.classList.add('toggle-active');
+                document.querySelectorAll('.monthly-stat').forEach(el => el.style.display = 'block');
+                document.querySelectorAll('.lifetime-stat').forEach(el => el.style.display = 'none');
+            }
+        }
+
+    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const data = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'User Joins',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2,
+                data: <%- JSON.stringify(monthlyUserJoins) %>, // User joins data
+            },
+            {
+                label: 'Total Purchases',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                data: <%- JSON.stringify(monthlyPurchases) %>, // Purchases data
+            },
+            {
+                label: 'Total Revenue',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                data: <%- JSON.stringify(monthlyRevenue) %>, // Revenue data
+            },
+        ],
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    top: 10,
+                    bottom: 30,
+                },
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: 'white',
+                        font: {
+                            size: 14,
+                        },
+                    },
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            return `${tooltipItem.dataset.label}: ${tooltipItem.raw.toLocaleString()}`;
+                        },
+                    },
+                },
+            },
+            elements: {
+                line: {
+                    tension: 0.4,
+                    borderWidth: 3,
+                },
+                point: {
+                    radius: 5,
+                    hoverRadius: 7,
+                    backgroundColor: 'white',
+                },
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                    },
+                    ticks: {
+                        color: 'white',
+                        font: {
+                            size: 12,
+                        },
+                    },
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                    },
+                    ticks: {
+                        color: 'white',
+                        font: {
+                            size: 12,
+                        },
+                        beginAtZero: true,
+                    },
+                },
+            },
+        },
+    };
+
+    const statsChart = new Chart(document.getElementById('statsChart'), config);
+    </script>
+</body>
+
+</html>

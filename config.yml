@@ -1,0 +1,134 @@
+# ===========================================================================
+# Plex Store Configuration
+# If you find any issues, need support, or have a suggestion for the product, let us know in our Discord server.
+# Discord: https://discord.gg/plexdev
+# Documentation: https://docs.plexdevelopment.net/
+# ===========================================================================
+MongoURI: "mongodb+srv://ReAwoken:ReAwoken@cluster0.2vra1th.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+DebugMode: false
+
+
+# NOTE: Permission system is coming soon.
+OwnerID: ["975041482203463790", "689095196675145758"] # The Discord User ID's that will have full access to the store, you can add multiple
+
+# ===========================================================================
+# DISCORD BOT
+# You must not leave them as blank!
+# ===========================================================================
+# The discord bot is mostly used for store logs, automatically giving roles, and automatically adding users to the server when they login
+
+Token: "MTQ1MDYxMTQzMjEzMDYxMzM2OQ.G1vrfs.pd_6U0jPDqLoepmyOmV7ZYb7s68UMGtfDMCnu8" # If you don't know how to get it, Look at our docs: https://docs.plexdevelopment.net
+GuildID: "1025419776115363860" # This is your discord server's ID, Right click on your server icon and copy ID
+autoJoinUsers: true # Should users automatically get added to your Discord server when they login?
+# ===========================================================================
+# DISCORD OAUTH2
+# You must not leave them as blank!
+# ===========================================================================
+# Discord OAuth2 credentials, get these from the Discord Developer Portal: https://discord.com/developers/applications
+# Note: MAKE SURE TO REPLACE LOCALHOST:3000 WITH THE DOMAIN OR IP YOU ACCESS THE WEBSITE WITH!
+clientID: "CLIENT_ID"
+clientSecret: "CLIENT_SECRET"
+callbackURL: "http://localhost:3000/auth/discord/callback" # Create a Redirect URL in the Developer Portal and set it to this callback URL
+
+secretKey: "uNLmkcssGY321sdfSDF4341345RGDFGDFAGFDGADFGADFGADFBDVBVVVVVVVVVVas1k8s0mj" # This can be anything, We recommend using this https://www.dashlane.com/features/password-generator with at least 20 characters, (6964)
+
+Secure: false # Enable if you are using HTTPS
+trustProxy: false # Enable If your application is behind a reverse proxy (like Cloudflare, Nginx, etc.)
+SessionExpires: "7d" # How long should a session be valid
+
+# ===========================================================================
+# WEBSERVER
+# You must not leave them as blank!
+# ===========================================================================
+baseURL: "http://localhost:3000" # The exact URL you use to access the website, No trailing slashes
+Port: 3000 # The port you want the webserver to be ran on
+
+Payments:
+  PayPal: # REQUIRES BUSINESS ACCOUNT!
+    Enabled: true # Enable paypal payments?
+    clientID: "CLIENT_ID" # PayPal Live API Client ID
+    clientSecret: "SECRET_KEY" # PayPal Live API Secret Key
+
+  Stripe:
+    Enabled: true # Enable stripe payments?
+    secretKey: "SECRET_KEY"
+
+  Coinbase:
+    Enabled: true # Enable coinbase (crypto) payments?
+    ApiKey: "API_KEY"
+    WebhookSecret: "WEBHOOK_SECRET"
+
+# On the coinbase commerce panel, don't forget to "Add an endpoint" and set the URL to YOURDOMAIN.com/webhooks/coinbase
+
+# ===========================================================================
+# STORE SETTINGS
+# You must not leave them as blank!
+# ===========================================================================
+productVersions:
+  autoDeleteOldFiles: false # Set to true to enable automatic deletion of old product files and versions
+  maxVersionsToKeep: 2 # Maximum number of versions to keep for each product
+
+# ===========================================================================
+# EMAILS
+# You must not leave them as blank!
+# ===========================================================================
+EmailSettings:
+  Enabled: false # Enable sending emails from the store to users? For example payment invoices, etc.
+  fromEmail: "store@plexdevelopment.net" # The email address to send emails from
+
+  # Choose the email provider: "sendgrid" or "smtp"
+  provider: "sendgrid"
+
+  # SendGrid-specific settings
+  sendGrid:
+    token: "TOKEN" # Only required if provider is "sendgrid"
+
+  # SMTP-specific settings
+  smtp:
+    host: "smtp.example.com" # SMTP server address (only required if provider is "smtp")
+    port: 587               # SMTP port, e.g., 587 for TLS or 465 for SSL (only required if provider is "smtp")
+    secure: false           # Use TLS (false) or SSL (true) (only required if provider is "smtp")
+    user: "your-email@example.com" # SMTP username (only required if provider is "smtp")
+    password: "your-smtp-password" # SMTP password (only required if provider is "smtp")
+
+# ===========================================================================
+# REDIRECTS
+# ===========================================================================
+# The Redirects section allows you to configure custom URL redirects.
+# 
+# Each redirect entry defines a URL path to match, a target URL to redirect to, 
+# an optional HTTP method (GET, POST, etc.), and an optional HTTP status code (301, 302, etc.).
+#
+# This feature allows you to add unlimited redirects without modifying the source code.
+# Redirects are useful for linking external resources, creating shortcuts, or routing traffic dynamically.
+#
+# Each redirect entry includes:
+# - `path`: The incoming URL pattern to match (supports wildcards like `*` or dynamic segments like `:wildcard`). For example, yourdomain.com/PATH (7588)
+# - `target`: The destination URL where the matched request will be redirected.
+# - `method`: (Optional) The HTTP method for the redirect, such as GET, POST, etc. Defaults to GET.
+# - `statusCode`: (Optional) The HTTP status code to use for the redirect. Defaults to 301 (permanent redirect).
+#
+# HTTP Status Codes:
+# - 301: Permanent Redirect. Use this when the URL has permanently moved to a new location.
+#        (SEO-friendly: Search engines will update their indexing to the new URL.)
+# - 302: Temporary Redirect. Use this for temporary changes where the original URL remains valid.
+#        (Search engines will not update their indexing to the new URL.)
+# - 307: Temporary Redirect (Method Retained). Use this when redirecting temporarily while 
+#        ensuring the HTTP method (e.g., POST, GET) and body remain unchanged.
+# - 308: Permanent Redirect (Method Retained). Use this for permanent redirects where 
+#        the HTTP method and body must not change.
+
+Redirects:
+  - path: "/api/v1/*"
+    target: "https://external.api.com/:wildcard"
+    method: "GET"
+    statusCode: 301
+
+  - path: "/assets/*"
+    target: "https://cdn.mysite.com/:wildcard"
+    statusCode: 302
+
+  - path: "/discord"
+    target: "https://discord.gg/plexdev"
+    method: "GET"
+    statusCode: 301

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - <%= settings.storeName %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+    <style>
+        :root {
+            --primary-color: #0d1117;
+            --secondary-color: <%= settings.accentColor %>;
+            --accent-color: <%= settings.accentColor %>;
+            --text-color: #c9d1d9;
+            --title-color: #ffffff;
+            --subtitle-color: #8b949e;
+            --sections-bg-color: #161b22;
+            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            --border-radius: 15px;
+            --error-color: #dc3545;
+            --error-light-color: rgba(220, 53, 69, 0.2);
+        }
+
+        body {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .section {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-container {
+            background: linear-gradient(135deg, var(--sections-bg-color), var(--primary-color));
+            color: var(--text-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            border: 2px solid var(--error-color);
+        }
+
+        .error-container h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--error-color);
+            margin-bottom: 10px;
+        }
+
+        .error-container p {
+            font-size: 1rem;
+            margin: 10px 0;
+            color: var(--subtitle-color);
+        }
+
+        .error-container p.error-description {
+            color: var(--error-color);
+            font-weight: bold;
+        }
+
+        .divider {
+            width: 80%;
+            height: 2px;
+            background-color: var(--error-light-color);
+            margin: 20px auto;
+        }
+
+        .button {
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .button-back {
+            background-color: var(--error-color);
+            color: #ffffff;
+            border: none;
+        }
+
+        .button-back:hover {
+            background-color: var(--text-color);
+            color: var(--error-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .button-home {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            margin-top: 10px;
+            border: none;
+        }
+
+        .button-home:hover {
+            background-color: var(--text-color);
+            color: var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            color: var(--error-color);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <section class="section">
+        <div class="error-container">
+            <i class="fas fa-exclamation-triangle error-icon"></i>
+            <h1>Error</h1>
+            <p>Something went wrong. Please try again later.</p>
+            <div class="divider"></div>
+            <p class="error-description"><%= errorMessage %></p>
+            <a href="/" class="button button-home">Back to Home</a>
+        </div>
+    </section>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

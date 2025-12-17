@@ -1,0 +1,149 @@
+<style>
+.navbar-tabs {
+    background: linear-gradient(135deg, #161b22, #0d1117);
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+    border-bottom: 3px solid var(--accent-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar-tabs::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
+
+.navbar-tabs .navbar-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--accent-color);
+    margin-bottom: 0.3rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-tabs .tab-container {
+    display: flex;
+    gap: 0.875rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    padding: 0.5rem;
+}
+
+.navbar-tabs a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #c9d1d9;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.9375rem;
+    border: 1px solid transparent;
+}
+
+.navbar-tabs a .icon {
+    margin-right: 0.625rem;
+    font-size: 1.125rem;
+    transition: transform 0.2s ease;
+}
+
+.navbar-tabs a:hover {
+    background: rgba(var(--accent-color-rgb), 0.15);
+    border-color: var(--accent-color);
+    transform: translateY(-4px);
+}
+
+.navbar-tabs a.is-active {
+    background: var(--accent-color);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-tabs a:hover .icon,
+.navbar-tabs a.is-active .icon {
+    transform: scale(1.1);
+}
+
+@media screen and (max-width: 768px) {
+    .navbar-tabs {
+        padding: 1rem;
+    }
+
+    .navbar-tabs .navbar-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .navbar-tabs .tab-container {
+        gap: 0.75rem;
+    }
+
+    .navbar-tabs a {
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .navbar-tabs .tab-container {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .navbar-tabs a {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+</style>
+
+<div class="navbar-tabs">
+    <div class="navbar-title">STAFF PANEL</div>
+    <div class="tab-container">
+        <a href="/staff/overview" class="<%= currentPage === 'overview' ? 'is-active' : '' %>">
+            <span class="icon"><i class="fas fa-tachometer-alt"></i></span> Overview
+        </a>
+        <a href="/staff/products" class="<%= currentPage === 'products' ? 'is-active' : '' %>">
+            <span class="icon"><i class="fas fa-box"></i></span> Products
+        </a>
+        <a href="/staff/discount-codes" class="<%= currentPage === 'discount-codes' ? 'is-active' : '' %>">
+            <span class="icon"><i class="fas fa-tags"></i></span> Discount Codes
+        </a>
+        <a href="/staff/anti-piracy" class="<%= currentPage === 'anti-piracy' ? 'is-active' : '' %>">
+            <span class="icon"><i class="fas fa-shield-alt"></i></span> Anti-Piracy
+        </a>
+        <a href="/staff/users" class="<%= currentPage === 'users' ? 'is-active' : '' %>">
+            <span class="icon"><i class="fas fa-users"></i></span> Users
+        </a>
+        <a href="/staff/sales" class="<%= currentPage === 'sales' ? 'is-active' : '' %>">
+            <span class="icon"><i class="fas fa-tags"></i></span> Sales
+        </a>
+        <a href="/staff/page-customization" class="<%= currentPage === 'page-customization' ? 'is-active' : '' %>">
+            <span class="icon"><i class="fas fa-paint-brush"></i></span> Page Customization
+        </a>
+        <a href="/staff/settings" class="<%= currentPage === 'settings' ? 'is-active' : '' %>">
+            <span class="icon"><i class="fas fa-cogs"></i></span> Settings
+        </a>
+    </div>
+</div>

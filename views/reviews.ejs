@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Reviews - <%= settings.storeName %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+
+    <meta property="og:title" content="Customer Reviews | <%= settings.storeName %>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<%= settings.baseURL %>" />
+    <meta property="og:image" content="<%= settings.logoPath %>" />
+    <meta property="og:description" content="See what our customers are saying about our products and services. Your feedback matters!" />
+    <meta name="theme-color" content="<%= settings.accentColor %>">
+    <meta property="og:site_name" content="<%= settings.storeName %>" />
+    <meta property="og:locale" content="en_US" />
+
+    <style>
+        :root {
+            --primary-color: #0d1117;
+            --secondary-color: <%= settings.accentColor %>;
+            --accent-color: <%= settings.accentColor %>;
+            --accent-color-rgb: <%= accentColorRgb %>;
+            --text-color: #c9d1d9;
+            --title-color: #ffffff;
+            --subtitle-color: #8b949e;
+            --sections-bg-color: #161b22;
+            --sections-subtitle-color: #768390;
+            --footer-bg-color: #161b22;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --padding: 20px;
+            --detail-title-color: #ffffff;
+            --detail-info-color: <%= settings.accentColor %>;
+            --date-color: #8b949e;
+            --input-bg-color: #21262d;
+        }
+
+        html {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .hero.is-medium {
+            position: relative;
+            background: url('<%= settings.backgroundImagePath %>') no-repeat center center fixed;
+            background-size: cover;
+            border-bottom: 2px solid <%= settings.accentColor %>;
+            z-index: 1;
+            min-height: 80vh;
+        }
+
+        .hero-body {
+            padding-top: 2rem !important;
+            padding-bottom: 2rem !important;
+            position: relative;
+            align-items: center;
+            display: flex;
+            z-index: 2;
+        }
+
+        .hero.is-medium {
+            min-height: 40vh;
+        }
+
+        .hero-body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: -1;
+            filter: blur(3px);
+        }
+
+        .title.is-spaced {
+            color: var(--title-color);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            color: var(--subtitle-color);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .section {
+            min-height: 60vh;
+        }
+
+        .reviews-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--sections-bg-color);
+            border-radius: var(--border-radius);
+            padding: var(--padding);
+            box-shadow: var(--box-shadow);
+            margin: auto;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .review-item {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: var(--sections-bg-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: left;
+        }
+
+        .review-item h3 {
+            color: var(--title-color);
+            margin-bottom: 5px;
+        }
+
+        .review-item p {
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .review-item .review-rating {
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+
+        .create-review-button {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #fff;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .create-review-button:hover,
+        .create-review-button:focus {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            box-shadow: none;
+        }
+
+        
+        .modal-card {
+            background-color: var(--sections-bg-color);
+            border: 2px solid var(--accent-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .modal-card-head {
+            background-color: var(--sections-bg-color);
+            border-bottom: 2px solid var(--accent-color);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .modal-card-title {
+            color: var(--title-color);
+            font-weight: bold;
+        }
+
+        .modal-card-body {
+            background-color: var(--sections-bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        .modal-card-foot {
+            background-color: var(--sections-bg-color);
+            border-top: 2px solid var(--accent-color);
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .label {
+            color: var(--subtitle-color);
+        }
+
+        .input, .textarea, .select select {
+            background-color: var(--input-bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--sections-subtitle-color);
+        }
+
+        .input::placeholder, .textarea::placeholder {
+            color: var(--subtitle-color);
+        }
+
+        .button.is-link {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .button.is-link:hover,
+        .button.is-link:focus {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .button.is-create {
+            background-color: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .button.is-create:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+
+        .review-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--sections-bg-color));
+            color: var(--text-color);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--accent-color);
+        }
+
+        .review-box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .review-box .icon {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .review-box .content {
+            color: var(--text-color);
+            font-size: 1rem;
+            line-height: 1.5;
+            flex-grow: 1;
+            margin-top: 10px;
+        }
+
+        .review-box .rating {
+            color: var(--accent-color);
+            margin-top: 5px;
+            font-size: 1.2rem;
+        }
+
+        .review-box .media-left {
+            margin-right: 15px;
+        }
+
+        .media-left .image img {
+            border-radius: 50%;
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border: 2px solid var(--accent-color);
+            transition: transform 0.3s ease;
+        }
+
+        .media-left .image img:hover {
+            transform: scale(1.1);
+        }
+
+        .review-box .media-content {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .review-box .media-content .title {
+            font-size: 1.2rem;
+            color: var(--title-color);
+            font-weight: bold;
+        }
+
+        .review-box .media-content .subtitle {
+            font-size: 1rem;
+            color: var(--subtitle-color);
+        }
+
+        .review-box .review-date {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--subtitle-color);
+            font-style: italic;
+        }
+
+        .has-text-title {
+            color: var(--title-color);
+        }
+
+    .pagination-link.is-current {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+  border-color: var(--accent-color);
+}
+
+.pagination-link {
+  background-color: var(--sections-bg-color);
+  color: var(--title-color); 
+  border-color: var(--accent-color);
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.pagination-link:hover {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+  border-color: var(--accent-color);
+}
+
+.pagination-previous, .pagination-next {
+  background-color: var(--sections-bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--accent-color);
+}
+
+.pagination-previous:hover, .pagination-next:hover {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+}
+
+.stats-container {
+   background: linear-gradient(145deg, var(--sections-bg-color), var(--primary-color));
+   border-radius: 12px;
+   padding: 1.5rem 2.5rem;
+   margin: 1.5rem auto;
+   max-width: 500px;
+   text-align: center;
+   border: 1px solid rgba(var(--accent-color-rgb), 0.2);
+   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 2rem;
+   width: calc(100% - 2rem);
+}
+
+.rating-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rating-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--title-color);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.rating-stars {
+    color: var(--accent-color);
+    font-size: 1.2rem;
+}
+
+.rating-label {
+    color: var(--subtitle-color);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0.5rem;
+}
+
+.total-reviews {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    border-left: 1px solid rgba(var(--accent-color-rgb), 0.2);
+    padding-left: 2rem;
+}
+
+    </style>
+</head>
+
+<body>
+    <%- include('partials/navbar', { user, existingUser }) %>
+
+
+    
+    <section class="hero is-medium is-fullheight-with-navbar" style="
+    <% if (typeof settings.backgroundGradient === 'undefined' || settings.backgroundGradient) { %>
+        background: linear-gradient(
+            180deg,
+            rgba(var(--accent-color-rgb), 0.6) 0%, 
+            rgba(var(--accent-color-rgb), 0.4) 40%, 
+            rgba(var(--accent-color-rgb), 0.3) 80%, 
+            rgba(var(--accent-color-rgb), 0.2) 100%
+        );
+    <% } else { %>
+        background: url('<%= settings.backgroundImagePath %>') no-repeat center center fixed;
+        background-size: cover;
+    <% } %>
+">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title is-spaced">
+                    Customer Reviews
+                </h1>
+                <h2 class="subtitle">
+                    Discover how our products have made a difference for others!
+                </h2>
+                <% if (user && products.length > 0) { %>
+                    <div class="buttons is-centered">
+                        <a class="button is-large is-create">
+                            <span class="icon"><i class="fas fa-pencil-alt"></i></span>
+                            <span>Create review</span>
+                        </a>
+                    </div>
+                <% } else if (user && products.length === 0) { %>
+                    <p class="help is-danger">You don't have any products to review!</p>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <div class="stats-container">
+        <div class="rating-left">
+            <div class="rating-number"><%= stats.averageRating %></div>
+            <div>
+                <div class="rating-stars">
+                    <% for(let i = 1; i <= 5; i++) { %>
+                        <% if(i <= Math.floor(stats.averageRating)) { %>
+                            <i class="fas fa-star"></i>
+                        <% } else if(i - stats.averageRating < 1 && i - stats.averageRating > 0) { %>
+                            <i class="fas fa-star-half-alt"></i>
+                        <% } else { %>
+                            <i class="far fa-star"></i>
+                        <% } %>
+                    <% } %>
+                </div>
+                <div class="rating-label">Average Rating</div>
+            </div>
+        </div>
+        <div class="total-reviews">Based on <%= stats.totalReviews %> reviews</div>
+    </div>
+    
+    <section id="reviews" class="section">
+        <div class="container">
+          <% if (reviews.length === 0) { %>
+            <p class="has-text-centered" style="color: var(--text-color); font-size: 1.1rem;">No reviews found.</p>
+          <% } else { %>
+            <div class="columns is-multiline">
+              <% reviews.forEach(review => { %>
+                <div class="column is-one-third">
+                  <div class="box review-box">
+                    <article class="media">
+                      <div class="media-left">
+                        <figure class="image is-64x64">
+                          <img src="<%= review.discordAvatar %>" alt="<%= review.discordUsername %>'s Avatar">
+                        </figure>
+                      </div>
+                      <div class="media-content">
+                        <div class="content">
+                          <p>
+                            <strong class="has-text-title"><%= review.discordUsername %></strong>
+                            <br>
+                            <span style="color: var(--secondary-color); font-weight: 500;"><%= review.productName %></span>
+                            <br>
+                            <span class="rating">
+                              <% for (let i = 0; i < review.rating; i++) { %>
+                                <i class="fas fa-star"></i>
+                              <% } %>
+                              <% for (let i = review.rating; i < 5; i++) { %>
+                                <i class="far fa-star"></i>
+                              <% } %>
+                            </span>
+                            <br>
+                            "<%= review.comment %>"
+                          </p>
+                        </div>
+                        <p class="review-date">
+                          <em><%= review.createdAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></em>
+                        </p>
+      
+                        <% if (user) { %>
+                            <% if (isStaff || (settings.allowReviewDeletion && user.id === review.discordID)) { %>
+                              <form action="/reviews/<%= review._id %>/delete" method="POST" style="display:inline;">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                <button type="submit" class="button is-danger is-small" onclick="return confirm('Are you sure you want to delete this review?');">
+                                  <i class="fas fa-trash-alt"></i>&nbsp;Delete
+                                </button>
+                              </form>
+                            <% } %>
+                          <% } %>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+      
+            <!-- Pagination -->
+            <nav class="pagination is-centered is-rounded" role="navigation" aria-label="pagination">
+              <% if (currentPage > 1) { %>
+                <a class="pagination-previous" href="/reviews?page=<%= currentPage - 1 %>">Previous</a>
+              <% } else { %>
+                <span class="pagination-previous is-disabled">Previous</span>
+              <% } %>
+              
+              <% if (currentPage < totalPages) { %>
+                <a class="pagination-next" href="/reviews?page=<%= currentPage + 1 %>">Next</a>
+              <% } else { %>
+                <span class="pagination-next is-disabled">Next</span>
+              <% } %>
+              
+              <ul class="pagination-list">
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                  <% if (i === currentPage) { %>
+                    <li><a class="pagination-link is-current" aria-label="Page <%= i %>" href="/reviews?page=<%= i %>"><%= i %></a></li>
+                  <% } else { %>
+                    <li><a class="pagination-link" aria-label="Goto page <%= i %>" href="/reviews?page=<%= i %>"><%= i %></a></li>
+                  <% } %>
+                <% } %>
+              </ul>
+            </nav>
+          <% } %>
+        </div>
+      </section>
+    
+    
+    
+    
+    
+
+      <div class="modal" id="create-review-modal">
+        <div class="modal-background" style="background-color: rgba(0, 0, 0, 0.8);"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Create Review</p>
+                <button class="delete" aria-label="close" id="close-modal"></button>
+            </header>
+            <section class="modal-card-body">
+                <form id="create-review-form" action="/reviews" method="POST">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                    <div class="field">
+                        <label class="label">Product</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="productId" required>
+                                    <% products.forEach(product => { %>
+                                        <option value="<%= product._id %>">
+                                            <%= product.name || (product.productId && product.productId.name) || 'Unnamed Product' %>
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Rating</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="rating" required>
+                                    <option value="5">★★★★★ (5 stars)</option>
+                                    <option value="4">★★★★☆ (4 stars)</option>
+                                    <option value="3">★★★☆☆ (3 stars)</option>
+                                    <option value="2">★★☆☆☆ (2 stars)</option>
+                                    <option value="1">★☆☆☆☆ (1 star)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Comment</label>
+                        <div class="control">
+                            <textarea class="textarea" name="comment" placeholder="Write your review here..." maxlength="350" minlength="<%= settings.minimumReviewLength %>" required></textarea>
+                        </div>
+                        <p class="help"><span id="char-count">350</span> characters remaining</p>
+                    </div>
+                </form>
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button is-link" type="submit" form="create-review-form">Submit Review</button>
+                <button class="button" id="cancel-modal">Cancel</button>
+            </footer>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+
+    <script>
+        const createReviewButton = document.querySelector('.button.is-create');
+        const commentTextarea = document.querySelector('textarea[name="comment"]');
+        const charCount = document.getElementById('char-count');
+        
+        if (createReviewButton) {
+            createReviewButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                document.getElementById('create-review-modal').classList.add('is-active');
+            });
+        
+            document.getElementById('close-modal').addEventListener('click', function() {
+                document.getElementById('create-review-modal').classList.remove('is-active');
+            });
+        
+            document.getElementById('cancel-modal').addEventListener('click', function() {
+                document.getElementById('create-review-modal').classList.remove('is-active');
+            });
+        
+            document.querySelector('.modal-background').addEventListener('click', function() {
+                document.getElementById('create-review-modal').classList.remove('is-active');
+            });
+        
+            if (commentTextarea) {
+                commentTextarea.addEventListener('input', function() {
+                    const remaining = 350 - commentTextarea.value.length;
+                    charCount.textContent = remaining;
+                });
+            }
+        }
+        </script>
+</body>
+
+</html>

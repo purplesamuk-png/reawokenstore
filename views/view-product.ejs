@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= product.name %> - <%= settings.storeName %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+
+    <meta property="og:title" content="<%= product.name %> | <%= settings.storeName %>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<%= settings.baseURL %>" />
+    <meta property="og:image" content="<%= settings.logoPath %>" />
+    <meta property="og:description" content="Explore the features and benefits of our high-quality products, designed to meet your specific needs." />
+    <meta name="theme-color" content="<%= settings.accentColor %>">
+    <meta property="og:site_name" content="<%= settings.storeName %>" />
+    <meta property="og:locale" content="en_US" />
+
+    <style>
+        :root {
+            --primary-color: #0d1117;
+            --secondary-color: <%= settings.accentColor %>;
+            --accent-color: <%= settings.accentColor %>;
+            --accent-color-rgb: <%= accentColorRgb %>;
+            --text-color: #c9d1d9;
+            --title-color: #ffffff;
+            --subtitle-color: #8b949e;
+            --sections-bg-color: #161b22;
+            --sections-subtitle-color: #768390;
+            --footer-bg-color: #161b22;
+            --button-discord-color: #7289da;
+            --price-color: <%= settings.accentColor %>;
+            --button-success-color: #28a745;
+            --note-color: #ffcc00;
+            --note-bg-color: #333333;
+        }
+
+        html {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .section {
+            min-height: 50vh;
+            padding-bottom: 50px;
+        }
+
+        .product-banner {
+            background-color: transparent;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .product-title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.product-title h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--title-color);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background-color: var(--sections-bg-color);
+            color: var(--price-color);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .product-description {
+            font-size: 1.2rem;
+            color: var(--subtitle-color);
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+
+        .button.is-success {
+            background-color: var(--button-success-color);
+            border-color: var(--button-success-color);
+            color: #fff;
+            transition: filter 0.3s ease;
+        }
+
+        .button.is-success:hover {
+            background-color: var(--button-success-color);
+            filter: brightness(0.9);
+        }
+
+        .button.is-primary {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #fff;
+            transition: filter 0.3s ease;
+        }
+
+        .button.is-primary:hover {
+            background-color: var(--accent-color);
+            filter: brightness(0.9);
+        }
+
+        .button.is-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+            color: #fff;
+            transition: filter 0.3s ease;
+        }
+
+        .button.is-info:hover {
+            background-color: #17a2b8;
+            filter: brightness(0.9);
+        }
+
+        .additional-info {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: var(--subtitle-color);
+            border-top: 1px solid #2c2f33;
+            padding-top: 20px;
+        }
+
+        .additional-info h3 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--title-color);
+            margin-bottom: 10px;
+        }
+
+        .markdown-body {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+
+        .markdown-body h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--title-color);
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--title-color);
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body h3 {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: var(--title-color);
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body h4 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--title-color);
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body p {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .markdown-body a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+
+        .markdown-body ul, .markdown-body ol {
+            padding-left: 20px;
+            margin-bottom: 1rem;
+            list-style-type: disc;
+        }
+
+        .markdown-body strong, .markdown-body b {
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .markdown-body code {
+            background-color: #161b22;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .markdown-body pre {
+            background-color: #161b22;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body blockquote {
+            padding: 10px 20px;
+            margin: 0 0 20px;
+            background-color: #161b22;
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body th, .markdown-body td {
+            padding: 10px;
+            border: 1px solid #c9d1d9;
+        }
+
+        .markdown-body th {
+            background-color: #161b22;
+        }
+
+        .markdown-body td {
+            background-color: var(--primary-color);
+        }
+
+        .markdown-body .info, .markdown-body .success, .markdown-body .warning, .markdown-body .danger {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        .markdown-body .info {
+            background-color: #017acd;
+        }
+
+        .markdown-body .success {
+            background-color: #28a745;
+        }
+
+        .markdown-body .warning {
+            background-color: #d39e00;
+        }
+
+        .markdown-body .danger {
+            background-color: #dc3545;
+        }
+
+        .login-message {
+            font-size: 0.9rem;
+            color: var(--subtitle-color);
+            margin-top: 5px;
+        }
+
+        .note {
+            color: var(--note-color);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .button[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .button.is-success:disabled {
+            background-color: var(--button-success-color);
+            border-color: var(--button-success-color);
+            color: rgba(255, 255, 255, 0.6);
+            cursor: not-allowed;
+        }
+
+        .button-with-margin {
+        margin-left: 10px; 
+}
+
+        .button-no-margin {
+        margin-left: 0;
+}
+
+.review-box {
+    background: linear-gradient(135deg, var(--primary-color), var(--sections-bg-color));
+    color: var(--text-color);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--box-shadow);
+    border: 2px solid var(--accent-color);
+}
+
+.review-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.review-box .media-left {
+    margin-right: 15px;
+}
+
+.media-left .image img {
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border: 2px solid var(--accent-color);
+    transition: transform 0.3s ease;
+}
+
+.media-left .image img:hover {
+    transform: scale(1.1);
+}
+
+.review-box .media-content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.review-box .media-content .title {
+    font-size: 1.2rem;
+    color: var(--title-color);
+    font-weight: bold;
+}
+
+.review-box .media-content .subtitle {
+    font-size: 1rem;
+    color: var(--subtitle-color);
+}
+
+.review-box .review-date {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: var(--subtitle-color);
+    font-style: italic;
+}
+
+.rating {
+    color: var(--accent-color);
+    margin-top: 5px;
+    font-size: 1.2rem;
+}
+
+.has-text-title {
+    color: var(--title-color);
+}
+
+.markdown-body iframe {
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.button-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.divider {
+    width: 100%;
+    border: 0;
+    border-top: 2px solid var(--sections-subtitle-color);
+    margin: 10px 0;
+}
+
+        .stock-indicator {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--sections-bg-color);
+            padding: 5px 12px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border: 1px solid var(--accent-color);
+        }
+
+        .stock-indicator .icon {
+            margin-right: 8px;
+            color: var(--accent-color);
+        }
+
+        .stock-indicator .stock-text {
+            color: var(--text-color);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .stock-count {
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .stock-empty {
+            border-color: #dc3545;
+        }
+
+        .stock-empty .icon,
+        .stock-empty .stock-count {
+            color: #dc3545;
+        }
+
+    </style>
+</head>
+<body>
+    <%- include('partials/navbar', { user, existingUser }) %>
+
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-half">
+                    <div class="product-banner">
+                        <img src="/<%= product.bannerImage %>" alt="<%= product.name %> Banner" class="image">
+                    </div>
+                    <div class="product-description markdown-body">
+                        <% if (product.description && product.description.trim()) { %>
+                            <%- md.render(product.description) %>
+                        <% } else { %>
+                            <p class="empty-description">No description available for this product.</p>
+                        <% } %>
+                    </div>
+                </div>
+    
+                <div class="column is-half">
+                    <div class="product-title">
+                        <p class="product-price">
+                            <% if (product.onSale && new Date(product.saleStartDate) <= new Date() && new Date() <= new Date(product.saleEndDate)) { %>
+                                <span style="color: var(--price-color); font-weight: bold;">
+                                    <%= settings.currencySymbol %><%= product.salePrice.toFixed(2) %>
+                                </span>
+                                <span style="text-decoration: line-through; font-style: italic; color: var(--subtitle-color); margin-left: 8px;">
+                                    <%= settings.currencySymbol %><%= product.price.toFixed(2) %>
+                                </span>
+                            <% } else if (product.productType === 'digitalFree') { %>
+                                Free
+                            <% } else { %>
+                                <%= settings.currencySymbol %><%= product.price.toFixed(2) %>
+                            <% } %>
+                        </p>
+                        <h1><%= product.name %></h1>
+                        
+                        <% if (product.productType === 'serials') { %>
+                            <div class="stock-indicator <%= product.serials.length === 0 ? 'stock-empty' : '' %>">
+                                <span class="icon">
+                                    <i class="fas fa-key"></i>
+                                </span>
+                                <span class="stock-text">Stock Available:<span class="stock-count"><%= product.serials.length %></span></span>
+                            </div>
+                        <% } %>
+                    </div>
+
+                    <% if (product.hideProduct) { %>
+                        <div class="note">
+                        This product is currently hidden from the store and public pages.
+                        </div>
+                    <% } %>
+
+                    <% if (product.pauseSelling) { %>
+                        <div class="note">
+                        This product is temporarily unavailable for purchase as sales are currently paused.
+                        </div>
+                    <% } %>
+
+                    <% if (product.productType === 'serials' && product.serials.length === 0) { %>
+                        <div class="note">
+                            This product is currently out of stock and cannot be purchased at this time.
+                        </div>
+                    <% } %>
+
+                    <div class="buttons">
+                        <% const isOwned = existingUser && existingUser.ownedProducts && existingUser.ownedProducts.some(p => p.equals(product._id)); %>
+                        
+                        <div class="button-row">
+                            <% if (isOwned && product.productType === 'service') { %>
+                                <a href="/profile/<%= existingUser.discordID %>" class="button is-link">
+                                    <span class="icon"><i class="fas fa-user-circle"></i></span>
+                                    <span>Go to Profile</span>
+                                </a>
+                                <% } else if ((isOwned || product.productType === 'digitalFree') && 
+                                (product.productType !== 'serials' || (product.productType === 'serials' && product.serialRequiresFile))) { %>
+                      <a href="/downloads/<%= product.urlId %>" class="button is-info">
+                          <span class="icon"><i class="fas fa-download"></i></span>
+                          <span>Download</span>
+                      </a>
+                  <% } %>
+                    
+                        <% if (product.productType !== 'digitalFree') { %>
+                            <% const isLoggedIn = user && existingUser; %>
+                            <% const isOutOfStock = product.productType === 'serials' && product.serials.length === 0; %>
+                            <div class="<%= isOwned && product.productType !== 'serials' ? 'button-with-margin' : 'button-no-margin' %>">
+                                <form action="/cart/add/<%= product._id %>" method="POST" style="display: inline-block;">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <button type="submit" class="button is-success" 
+                                    <% if (!isLoggedIn || product.pauseSelling || isOutOfStock) { %>disabled<% } %>>
+                                <span class="icon"><i class="fas fa-cart-plus"></i></span>
+                                <span>Add to Cart</span>
+                            </button>
+                        </form>
+                                <% if (!isLoggedIn) { %>
+                                    <p class="login-message" style="margin-top: 10px;">You must be logged in to add products to your cart.</p>
+                                <% } %>
+                            </div>
+                        <% } %>
+                    
+                        <% if (isStaff && product.productType !== 'serials' && product.productType !== 'service') { %>
+                            <hr class="divider">
+                            <!-- Second row of buttons -->
+                            <div class="button-row">
+                                <a href="/staff/products/update/<%= product._id %>" class="button is-primary">
+                                    <span class="icon"><i class="fas fa-pencil-alt"></i></span>
+                                    <span>Update Product</span>
+                                </a>
+                                <a href="/staff/products/edit/<%= product._id %>" class="button is-info">
+                                    <span class="icon"><i class="fas fa-cog"></i></span>
+                                    <span>Edit Product</span>
+                                </a>
+                            </div>
+                        <% } else if (isStaff) { %>
+                            <hr class="divider">
+                            <!-- Only show Edit Product button for these types -->
+                            <div class="button-row">
+                                <a href="/staff/products/edit/<%= product._id %>" class="button is-info">
+                                    <span class="icon"><i class="fas fa-cog"></i></span>
+                                    <span>Edit Product</span>
+                                </a>
+                            </div>
+                        <% } %>
+                    </div>
+                    
+                    <% if (product.dependencies && product.dependencies.trim()) { %>
+                        <div class="additional-info">
+                            <h3>Dependencies</h3>
+                            <div class="markdown-body">
+                                <%- md.render(product.dependencies) %>
+                            </div>
+                        </div>
+                    <% } %>
+    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <% if (reviews.length > 0 && settings.displayProductReviews) { %>
+    <section class="reviews-section section" style="margin-top: 50px;">
+        <div class="container">
+            <hr style="border: 0; border-top: 1px solid var(--sections-subtitle-color); margin-bottom: 20px;">
+            <h2 class="title is-4" style="color: var(--title-color);">Reviews for <%= product.name %></h2>
+            <% if (reviews.length > 0) { %>
+                <div class="columns is-multiline">
+                    <% reviews.forEach(review => { %>
+                        <div class="column is-one-third">
+                            <div class="box review-box">
+                                <article class="media">
+                                    <div class="media-left">
+                                        <figure class="image is-64x64">
+                                            <img src="<%= review.discordAvatar %>" alt="<%= review.discordUsername %>'s Avatar">
+                                        </figure>
+                                    </div>
+                                    <div class="media-content">
+                                        <div class="content">
+                                            <p>
+                                                <strong class="has-text-title"><%= review.discordUsername %></strong>
+                                                <br>
+                                                <span class="rating">
+                                                    <% for (let i = 0; i < review.rating; i++) { %>
+                                                        <i class="fas fa-star"></i>
+                                                    <% } %>
+                                                    <% for (let i = review.rating; i < 5; i++) { %>
+                                                        <i class="far fa-star"></i>
+                                                    <% } %>
+                                                </span>
+                                                <br>
+                                                "<%= review.comment %>"
+                                            </p>
+                                        </div>
+                                        <p class="review-date">
+                                            <em><%= new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></em>
+                                        </p>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p class="has-text-centered" style="color: var(--text-color);">No reviews for this product yet.</p>
+            <% } %>
+        </div>
+    </section>
+    <% } %>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= fullUser.username %>'s Profile - <%= settings.storeName %></title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+
+  <meta property="og:title" content="<%= fullUser.username %>'s Profile | <%= settings.storeName %>" />
+  <meta property="og:type" content="profile" />  
+  <meta property="og:url" content="<%= settings.baseURL %>/profile/<%= userInfo.discordID %>" />
+  <meta property="og:image" content="https://cdn.discordapp.com/avatars/<%= userInfo.discordID %>/<%= fullUser.avatar %>.png" />
+  <meta property="og:description" content="User profile for <%= fullUser.username %> on <%= settings.storeName %>" />
+  <meta name="theme-color" content="<%= settings.accentColor %>">
+  <meta property="og:site_name" content="<%= settings.storeName %>" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="profile:username" content="<%= fullUser.username %>" />
+
+  <style>
+    :root {
+      --primary-color: #0d1117;
+      --secondary-color: <%=settings.accentColor %>;
+      --accent-color: <%=settings.accentColor %>;
+      --accent-color-rgb: <%=accentColorRgb %>;
+      --text-color: #c9d1d9;
+      --title-color: #ffffff;
+      --subtitle-color: #8b949e;
+      --sections-bg-color: #161b22;
+      --border-radius: 15px;
+      --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    }
+
+    html,
+    body {
+      background-color: var(--primary-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+    }
+
+    .profile-header {
+      text-align: center;
+      background: linear-gradient(180deg,
+          rgba(var(--accent-color-rgb), 0.6) 0%,
+          rgba(var(--accent-color-rgb), 0.4) 40%,
+          rgba(var(--accent-color-rgb), 0.3) 80%,
+          rgba(var(--accent-color-rgb), 0.2) 100%);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      border: 2px solid var(--accent-color);
+      margin: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .profile-header .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+
+    .profile-header h1 {
+      color: var(--title-color);
+      font-size: 2rem;
+      margin-bottom: 5px;
+    }
+
+    .profile-header p {
+      color: var(--subtitle-color);
+      font-size: 1.2rem;
+    }
+
+    .profile-info {
+      background-color: var(--sections-bg-color);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      margin: 0;
+      border: 2px solid var(--accent-color);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .info-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 1rem;
+      background-color: var(--primary-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      transition: transform 0.2s ease-in-out;
+      min-height: 80px;
+    }
+
+    .info-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    }
+
+    .info-title {
+      color: var(--subtitle-color);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .info-value {
+      color: var(--title-color);
+      font-weight: bold;
+      font-size: 0.8rem;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      width: 100%;
+    }
+
+    .profile-info .column.is-half {
+      padding: 0.5rem;
+    }
+
+    .info-item .icon {
+      flex-shrink: 0;
+      font-size: 1.5rem;
+      color: var(--accent-color);
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      width: 45px;
+      height: 45px;
+    }
+
+    .info-item>div {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .owned-products {
+      margin-top: 30px;
+    }
+
+    .owned-products .card {
+      background-color: var(--sections-bg-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 2px solid var(--accent-color);
+    }
+
+    .owned-products .product-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--subtitle-color);
+    }
+
+    .owned-products .product-item:last-child {
+      border-bottom: none;
+    }
+
+    .product-image {
+      width: 90px;
+      height: auto;
+      border-radius: 8px;
+      margin-right: 15px;
+    }
+
+    .product-title-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .owned-products .product-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--text-color);
+      flex: 1;
+    }
+
+    @media screen and (max-width: 768px) {
+      .owned-products .product-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .owned-products .buttons {
+        justify-content: flex-start;
+        margin-top: 5px;
+      }
+
+
+      .dropdown-container .control {
+        width: 100%;
+      }
+
+      .dropdown-container {
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: 10px;
+      }
+    }
+
+    .staff-actions {
+      margin-top: 40px;
+    }
+
+    .dropdown-container {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-top: 10px;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .dropdown-container .control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .select {
+      border: 2px solid var(--accent-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      background-color: var(--sections-bg-color);
+      color: var(--text-color);
+      transition: all 0.2s ease-in-out;
+      max-width: 100%;
+      width: 150px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .select select {
+      padding: 5px;
+      color: var(--text-color);
+      background: none;
+      border: none;
+      outline: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+    }
+
+  .select select option:disabled {
+  color: var(--subtitle-color);
+  font-style: italic;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+    .button.is-link {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+      transition: filter 0.3s ease;
+      color: #fff;
+    }
+
+    .button.is-link:hover {
+      background-color: var(--accent-color);
+      filter: brightness(0.9);
+    }
+
+    .button.is-danger {
+      background-color: #ED4245;
+      color: white;
+      border: none;
+      transition: filter 0.3s ease;
+    }
+
+    .button.is-danger:hover,
+    .button.is-danger:focus {
+      background-color: #ED4245;
+      color: white;
+      filter: brightness(0.9);
+    }
+
+    .select:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    }
+
+    .select select option {
+      background-color: var(--sections-bg-color);
+      color: var(--text-color);
+    }
+
+    .select select option:hover {
+      background-color: var(--accent-color);
+      color: var(--primary-color);
+    }
+
+    .select:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    }
+
+    .email-blur {
+      filter: blur(4px);
+      transition: filter 0.3s ease;
+      cursor: pointer;
+    }
+
+    .email-blur:hover {
+      filter: none;
+    }
+
+    .markdown-body {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text-color);
+    }
+
+    .tabs-wrapper {
+    margin-bottom: 2rem;
+  }
+
+  .tabs.is-boxed {
+    margin-bottom: 0;
+  }
+
+  .tabs.is-boxed ul {
+    border-bottom: 2px solid var(--accent-color);
+  }
+
+  .tabs.is-boxed li {
+    margin-bottom: -2px;
+  }
+
+  .tabs.is-boxed a {
+    border: 2px solid transparent;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    color: var(--text-color);
+    background-color: var(--sections-bg-color);
+    transition: all 0.3s ease;
+    padding: 1rem 1.5rem;
+  }
+
+  .tabs.is-boxed li:hover a {
+    background-color: var(--primary-color);
+    border-bottom-color: var(--accent-color);
+  }
+
+  .tabs.is-boxed li.is-active a {
+    background-color: var(--primary-color);
+    border-color: var(--accent-color);
+    border-bottom-color: var(--primary-color);
+    color: var(--accent-color);
+  }
+
+  .tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .tab-content.is-active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .serial-content {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.serial-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.serial-title {
+  color: var(--title-color);
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.serial-date {
+  color: var(--subtitle-color);
+  font-size: 0.8rem;
+}
+
+
+.serial-key {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--primary-color);
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+}
+
+.serial-key code {
+  flex: 1;
+  color: var(--accent-color);
+  font-family: monospace;
+  font-size: 1rem;
+  background: none;
+  padding: 0.25rem;
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+  .copy-button {
+    background-color: var(--sections-bg-color);
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    transition: all 0.2s ease;
+  }
+
+  .copy-button:hover {
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+  }
+
+  @media screen and (max-width: 768px) {
+    .serial-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .tabs.is-boxed a {
+      padding: 0.75rem 1rem;
+    }
+  }
+
+  </style>
+</head>
+
+<body>
+  <%- include('partials/navbar', { user, existingUser }) %>
+
+  <section class="section">
+    <div class="container">
+      <div class="columns is-centered">
+        <!-- Profile Header -->
+        <div class="column is-half">
+          <div class="profile-header">
+            <img src="https://cdn.discordapp.com/avatars/<%= userInfo.discordID %>/<%= fullUser.avatar %>.png" alt="User Avatar" class="avatar">
+            <h1>
+              <%= fullUser.username %>
+            </h1>
+            <% if (isStaff) { %>
+            <form action="/profile/<%= userInfo.discordID %>/ban" method="POST" style="margin-top: 15px;">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <% if (user.id===userInfo.discordID) { %>
+              <button type="button" class="button is-danger" disabled>
+                <span class="icon"><i class="fas fa-ban"></i></span>
+                <span>Cannot Ban Yourself</span>
+              </button>
+              <% } else { %>
+              <% if (userInfo.banned) { %>
+              <button type="submit" class="button is-danger">
+                <span class="icon"><i class="fas fa-ban"></i></span>
+                <span>Unban User</span>
+              </button>
+              <% } else { %>
+              <button type="submit" class="button is-danger">
+                <span class="icon"><i class="fas fa-ban"></i></span>
+                <span>Ban User</span>
+              </button>
+              <% } %>
+              <% } %>
+            </form>
+            <% } %>
+          </div>
+        </div>
+  
+        <!-- Profile Info -->
+        <div class="column is-half">
+          <div class="profile-info">
+            <div class="columns is-multiline">
+              <!-- User ID -->
+              <div class="column is-half">
+                <div class="info-item">
+                  <span class="icon">
+                    <i class="fas fa-id-card"></i>
+                  </span>
+                  <div>
+                    <p class="info-title">User ID</p>
+                    <p class="info-value">
+                      <%= userInfo.discordID %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+  
+              <!-- Email -->
+              <div class="column is-half">
+                <div class="info-item">
+                  <span class="icon">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                  <div>
+                    <p class="info-title">Email</p>
+                    <p class="info-value email-blur">
+                      <%= userInfo.email %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+  
+              <!-- Joined -->
+              <div class="column is-half">
+                <div class="info-item">
+                  <span class="icon">
+                    <i class="fas fa-calendar-alt"></i>
+                  </span>
+                  <div>
+                    <p class="info-title">Joined</p>
+                    <p class="info-value">
+                      <%= userInfo.joinedAt.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+  
+              <!-- Total Spent -->
+              <div class="column is-half">
+                <div class="info-item">
+                  <span class="icon">
+                    <i class="fas fa-wallet"></i>
+                  </span>
+                  <div>
+                    <p class="info-title">Total Spent</p>
+                    <p class="info-value">
+                      <%= settings.currencySymbol %><%= userInfo.totalSpent.toLocaleString('en-US') %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Products and Serials Section -->
+      <div class="owned-products">
+        <div class="tabs-wrapper">
+          <div class="tabs is-centered is-boxed">
+            <ul>
+              <li class="is-active" data-tab="products">
+                <a>
+                  <span class="icon"><i class="fas fa-box"></i></span>
+                  <span>Products</span>
+                </a>
+              </li>
+              <li data-tab="serials">
+                <a>
+                  <span class="icon"><i class="fas fa-key"></i></span>
+                  <span>Serials</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+  
+        <div class="tab-contents">
+          <!-- Products Tab Content -->
+          <div id="products-tab" class="tab-content is-active">
+            <h2 class="title is-4" style="color: var(--title-color);">
+              Owned Products (<%= ownedProducts.length %>)
+            </h2>
+            <% if (isStaff) { %>
+            <div class="dropdown-container">
+              <form action="/profile/<%= userInfo.discordID %>/add-product" method="POST" style="display: flex; gap: 10px; align-items: center;">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <div class="control">
+                  <div class="select">
+                    <select name="productId">
+                      <% products.forEach(product=> { %>
+                      <option value="<%= product._id %>">
+                        <%= product.name %>
+                      </option>
+                      <% }) %>
+                    </select>
+                  </div>
+                </div>
+                <div class="control">
+                  <button type="submit" class="button is-link">
+                    <span class="icon"><i class="fas fa-plus"></i></span>
+                    <span>Add Product</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+            <% } %>
+            <% if (ownedProducts.length > 0) { %>
+            <% ownedProducts.forEach(product => { %>
+              <% if (product.productType !== 'serials' || product.serialRequiresFile) { %>
+            <div class="card">
+              <div class="product-item">
+                <img src="/<%= product.bannerImage %>" alt="<%= product.name %> Banner" class="product-image">
+                <div class="product-title-wrapper">
+                  <div class="product-title">
+                    <%= product.name %>
+                  </div>
+                </div>
+                <div class="buttons">
+                  <% if (product.productType === 'service') { %>
+                  <button class="button is-link" onclick="openServiceModal('<%= product.name.replace(/'/g, "\\'") %>', `<%= product.serviceMessage.replace(/`/g, '\\`').replace(/'/g, "\\'") %>`)">
+                    <span class="icon"><i class="fas fa-info-circle"></i></span>
+                    <span>View Details</span>
+                  </button>
+                  <% } else { %>
+                  <a href="/downloads/<%= product.urlId %>" class="button is-link">
+                    <span class="icon"><i class="fas fa-download"></i></span>
+                    <span>Download</span>
+                  </a>
+                  <% } %>
+                  <% if (isStaff) { %>
+                  <form action="/profile/<%= userInfo.discordID %>/delete/<%= product._id %>" method="POST" style="display:inline;">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="submit" class="button is-danger" onclick="return confirm('Are you sure you want to delete this product from the user?');">
+                      <span class="icon"><i class="fas fa-trash-alt"></i></span>
+                      <span>Delete</span>
+                    </button>
+                  </form>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+            <% } %>
+            <% }); %>
+            <% } else { %>
+            <p class="has-text-centered" style="color: var(--subtitle-color);">No owned products.</p>
+            <% } %>
+          </div>
+  
+          <!-- Serials Tab Content -->
+          <div id="serials-tab" class="tab-content">
+            <h2 class="title is-4" style="color: var(--title-color);">
+              Serials (<%= (userInfo.ownedSerials && userInfo.ownedSerials.length) || 0 %>)
+            </h2>
+
+            <% if (isStaff) { %>
+              <div class="dropdown-container">
+                <form action="/profile/<%= userInfo.discordID %>/add-serial" method="POST" style="display: flex; gap: 10px; align-items: center;">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  
+                  <!-- Product Selection -->
+                  <div class="control">
+                    <div class="select">
+                      <select name="productId">
+                        <option value="">Select Serial Product</option>
+                        <% serialProducts.forEach(product => { %>
+                          <option value="<%= product._id %>" 
+                                  <%= product.stockCount === 0 ? 'disabled' : '' %>
+                                  style="<%= product.stockCount === 0 ? 'color: var(--subtitle-color);' : '' %>">
+                            <%= product.name %> (<%= product.stockCount %> available)
+                            <%= product.stockCount === 0 ? '- Out of Stock' : '' %>
+                          </option>
+                        <% }) %>
+                      </select>
+                    </div>
+                  </div>
+              
+                  <div class="control">
+                    <button type="submit" class="button is-link">
+                      <span class="icon"><i class="fas fa-plus"></i></span>
+                      <span>Add Serial</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            <% } %>
+
+            <% if (userInfo.ownedSerials && userInfo.ownedSerials.length > 0) { %>
+              <% userInfo.ownedSerials.forEach(serial => { %>
+                <div class="card">
+                  <div class="product-item">
+                    <div class="serial-content">
+                      <div class="serial-header">
+                        <h3 class="serial-title"><%= serial.productName %></h3>
+                        <span class="serial-date">Purchased: <%= new Date(serial.purchaseDate).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %></span>
+                      </div>
+                      <div class="serial-key">
+                        <code><%= serial.key.key || serial.key %></code>
+                        <button class="button is-small copy-button" onclick="copySerial(this, '<%= serial.key.key || serial.key %>')">
+                          <span class="icon is-small">
+                            <i class="fas fa-copy"></i>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p class="has-text-centered" style="color: var(--subtitle-color);">No serial keys found.</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <div id="serviceModal" class="modal">
+    <div class="modal-background" style="background-color: rgba(0, 0, 0, 0.8);"></div>
+    <div class="modal-card" style="background-color: var(--sections-bg-color); border: 2px solid var(--accent-color); border-radius: var(--border-radius);">
+      <header class="modal-card-head" style="background-color: var(--sections-bg-color); border-bottom: 2px solid var(--accent-color);">
+        <p class="modal-card-title" id="serviceModalTitle" style="color: var(--title-color); font-weight: bold;"></p>
+        <button class="delete" aria-label="close" onclick="closeServiceModal()" style="background-color: var(--primary-color); border: none; color: var(--accent-color);"></button>
+      </header>
+      <section class="modal-card-body" style="background-color: var(--sections-bg-color); color: var(--text-color); font-size: 1rem;">
+        <div id="serviceModalMessage" class="markdown-body">
+          <!-- Dynamically updated -->
+        </div>
+      </section>
+      <footer class="modal-card-foot" style="background-color: var(--sections-bg-color); border-top: 2px solid var(--accent-color); display: flex; justify-content: flex-end;">
+        <button class="button" onclick="closeServiceModal()" style="background-color: var(--accent-color); color: #fff; border: none;">
+          Close
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <%- include('partials/footer') %>
+
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+  <script>
+    function openServiceModal(productName, serviceMessage) {
+      const modal = document.getElementById('serviceModal');
+      const modalTitle = document.getElementById('serviceModalTitle');
+      const modalMessage = document.getElementById('serviceModalMessage');
+
+      const md = window.markdownit();
+
+      modalTitle.textContent = productName;
+      modalMessage.innerHTML = md.render(serviceMessage);
+      modal.classList.add('is-active');
+    }
+
+    function closeServiceModal() {
+      const modal = document.getElementById('serviceModal');
+      modal.classList.remove('is-active');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+  // Tab switching functionality
+  const tabs = document.querySelectorAll('.tabs li');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  function switchTab(tabName) {
+    // Update active tab
+    tabs.forEach(t => {
+      if (t.dataset.tab === tabName) {
+        t.classList.add('is-active');
+      } else {
+        t.classList.remove('is-active');
+      }
+    });
+
+    // Update active content
+    tabContents.forEach(content => {
+      if (content.id === `${tabName}-tab`) {
+        content.classList.add('is-active');
+      } else {
+        content.classList.remove('is-active');
+      }
+    });
+  }
+
+  // Handle tab clicks
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      window.location.hash = target; // Update URL hash when clicking tabs
+      switchTab(target);
+    });
+  });
+
+  // Check URL hash on page load
+  if (window.location.hash) {
+    const hash = window.location.hash.substring(1); // Remove the # symbol
+    if (['products', 'serials'].includes(hash)) {
+      switchTab(hash);
+    }
+  }
+});
+
+  // Serial copy functionality
+  function copySerial(button, serialKey) {
+    navigator.clipboard.writeText(serialKey).then(() => {
+      const originalHTML = button.innerHTML;
+      button.innerHTML = '<span class="icon is-small"><i class="fas fa-check"></i></span>';
+      button.classList.add('is-success');
+      
+      setTimeout(() => {
+        button.innerHTML = originalHTML;
+        button.classList.remove('is-success');
+      }, 2000);
+    });
+  }
+</script>
+
+</body>
+
+</html>

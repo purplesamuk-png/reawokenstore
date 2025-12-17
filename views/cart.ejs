@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - <%= settings.storeName %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+
+    <meta property="og:title" content="Cart | <%= settings.storeName %>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<%= settings.baseURL %>" />
+    <meta property="og:image" content="<%= settings.logoPath %>" />
+    <meta property="og:description" content="Review the items in your cart and proceed to checkout to complete your purchase." />
+    <meta name="theme-color" content="<%= settings.accentColor %>">
+    <meta property="og:site_name" content="<%= settings.storeName %>" />
+    <meta property="og:locale" content="en_US" />
+
+    <style>
+        :root {
+            --primary-color: #0d1117;
+            --secondary-color: <%= settings.accentColor %>;
+            --accent-color: <%= settings.accentColor %>;
+            --accent-color-rgb: <%= accentColorRgb %>;
+            --text-color: #c9d1d9;
+            --title-color: #ffffff;
+            --subtitle-color: #8b949e;
+            --sections-bg-color: #161b22;
+            --sections-subtitle-color: #768390;
+            --footer-bg-color: #161b22;
+            --price-color: <%= settings.accentColor %>;
+            --button-success-color: #28a745;
+            --button-success-hover-color: #218838;
+            --button-paypal-color: #ffc439;
+            --button-stripe-color: #6772e5;
+            --button-crypto-color: #4caf50;
+            --button-crypto-hover-color: #388e3c;
+        }
+
+        html {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .section {
+            min-height: 80vh;
+            padding-bottom: 50px;
+        }
+
+        .cart-container {
+            display: flex;
+            flex-direction: column;
+            background-color: transparent;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            align-items: center;
+        }
+
+        @media (min-width: 860px) {
+            .cart-container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+
+        .cart-items, .checkout-summary {
+            background-color: var(--sections-bg-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: 2px solid var(--accent-color);
+        }
+
+        @media (min-width: 860px) {
+            .cart-items {
+                width: 65%;
+                margin-bottom: 0;
+            }
+
+            .checkout-summary {
+                width: 30%;
+                margin-bottom: 0;
+            }
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--sections-subtitle-color);
+            padding-bottom: 15px;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .cart-item-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 60%;
+            margin-left: 15px;
+        }
+
+        .cart-item-title {
+            color: var(--text-color);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: var(--price-color);
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .cart-item-remove {
+            color: #ff5c5c;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .checkout-summary p {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--price-color);
+            margin-bottom: 10px;
+        }
+
+        .checkout-buttons {
+            margin-top: 20px;
+        }
+
+        .checkout-buttons .button {
+            margin-bottom: 10px;
+        }
+
+        .discount-code {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .discount-code input {
+            flex: 1;
+            margin-right: 10px;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background-color: #222;
+            color: #fff;
+        }
+
+        .discount-code input::placeholder {
+            color: var(--subtitle-color);
+        }
+
+        .title {
+            color: var(--title-color);
+        }
+
+        .button-paypal {
+            background-color: var(--button-paypal-color);
+            border-color: var(--button-paypal-color);
+            color: #000;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .button-paypal:hover {
+            background-color: #e0a800;
+            border-color: #e0a800;
+            color: #000;
+        }
+
+        .button-stripe {
+            background-color: var(--button-stripe-color);
+            border-color: var(--button-stripe-color);
+            color: #fff;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .button-stripe:hover {
+            background-color: #555abf;
+            border-color: #555abf;
+            color: #fff;
+        }
+
+        .button-crypto {
+            background-color: var(--button-crypto-color);
+            border-color: var(--button-crypto-color);
+            color: #fff;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .button-crypto:hover {
+            background-color: var(--button-crypto-hover-color);
+            border-color: var(--button-crypto-hover-color);
+            color: #fff;
+        }
+
+        .terms-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .terms-container input[type="checkbox"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        label.checkbox a {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        label.checkbox a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        .terms-container a {
+            color: var(--accent-color);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .terms-container a:hover {
+            text-decoration: none;
+        }
+
+        .button[disabled] {
+            background-color: var(--button-paypal-color);
+            border-color: var(--button-paypal-color);
+            color: #000;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .button-stripe[disabled] {
+            background-color: var(--button-stripe-color);
+            border-color: var(--button-stripe-color);
+            color: #fff;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .button-crypto[disabled] {
+            background-color: var(--button-crypto-color);
+            border-color: var(--button-crypto-color);
+            color: #fff;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .empty-cart-message {
+            font-size: 1.2rem;
+            color: var(--subtitle-color);
+            margin-bottom: 20px;
+        }
+
+    .keep-shopping-button {
+    margin-top: 20px;
+    background-color: var(--accent-color) !important;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    display: inline-block;
+}
+
+.keep-shopping-button:hover {
+    transform: translateY(-2px);
+    cursor: pointer;
+}
+
+        .cart-item-remove:hover {
+    color: #ff4c4c;
+}
+
+    </style>
+</head>
+<body>
+    <%- include('partials/navbar', { user, existingUser }) %>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Cart Items (<%= cartProducts.length %>)</h1>
+            <div class="cart-container">
+                <div class="cart-items">
+                    <% if (cartProducts.length > 0) { %>
+                        <% cartProducts.forEach(product => { %>
+                            <div class="cart-item">
+                                <img src="/<%= product.bannerImage %>" alt="<%= product.name %> Banner">
+                                <div class="cart-item-details">
+                                    <div class="cart-item-title"><%= product.name %></div>
+                                    <div class="cart-item-price">
+                                        <% if (product.onSale && new Date(product.saleStartDate) <= new Date() && new Date() <= new Date(product.saleEndDate)) { %>
+                                            <span style="color: var(--price-color); font-weight: bold;">
+                                                <%= settings.currencySymbol %><%= product.salePrice.toFixed(2) %>
+                                            </span>
+                                            <span style="text-decoration: line-through; font-style: italic; color: var(--subtitle-color); margin-left: 8px;">
+                                                <%= settings.currencySymbol %><%= product.price.toFixed(2) %>
+                                            </span>
+                                        <% } else { %>
+                                            <%= settings.currencySymbol %><%= product.price.toFixed(2) %>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <form action="/cart/remove/<%= product._id %>" method="POST" style="display:inline;">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <button type="submit" class="cart-item-remove" style="border: none; background: none; color: #ff5c5c; font-size: 1.4rem; cursor: pointer; transition: transform 0.2s;">
+                                        <i class="fas fa-times-circle"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        <% }) %>
+                        <a href="/products" class="button is-link keep-shopping-button">Keep shopping...</a>
+                    <% } else { %>
+                        <p class="empty-cart-message">Your cart is empty.</p>
+                        <a href="/products" class="button is-link keep-shopping-button">Browse Products</a>
+                    <% } %>
+                </div>
+
+                <% if (cartProducts.length > 0) { %>
+                <div class="checkout-summary">
+                    <% if (discountApplied) { %>
+                        <p style="color: var(--button-success-color);">Discount (<%= discountPercentage %>%): -<%= settings.currencySymbol %><%= discountAmount.toFixed(2) %></p>
+                    <% } %>
+
+                    <% if (salesTaxAmount > 0) { %>
+                        <p>Sales Tax: <%= settings.currencySymbol %><%= salesTaxAmount.toFixed(2) %></p>
+                    <% } %>                
+
+                    <div class="total-price">
+                        <% if (discountApplied) { %>
+                            <span style="font-weight: bold; font-size: 1.6rem;">
+                                Total: <span style="color: #e74c3c;"><%= settings.currencySymbol %><%= totalPrice.toFixed(2) %></span>
+                            </span>
+                            <span style="text-decoration: line-through; font-style: italic; margin-left: 10px; color: #a1a1a1; font-size: 1.2rem;">
+                                <%= settings.currencySymbol %><%= originalTotal.toFixed(2) %>
+                            </span>
+                        <% } else { %>
+                            <span style="font-weight: bold; font-size: 1.4rem;">
+                                Total: <span style="color: var(--price-color);"><%= settings.currencySymbol %><%= totalPrice.toFixed(2) %></span>
+                            </span>
+                        <% } %>
+                    </div>
+                
+                    <div class="discount-code" style="display: flex; flex-direction: column; width: 100%;">
+                        <% if (discountError) { %>
+                            <p style="color: #ff5c5c; margin-bottom: 5px; white-space: normal;"><%= discountError %></p>
+                        <% } %>
+                        <form action="/checkout/apply-discount" method="POST" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <input class="input" type="text" name="discountCode" placeholder="Discount Code" style="flex: 1;">
+                            <button type="submit" class="button is-info">Apply</button>
+                        </form>
+                    </div>
+
+                    <label class="checkbox" style="color: var(--subtitle-color);">
+                        <input type="checkbox" id="termsCheckbox">
+                        I agree to the <a href="/tos" target="_blank">Terms of Service</a>
+                    </label>
+                
+                    <div class="checkout-buttons">
+                        <% if (config.Payments.PayPal.Enabled) { %>
+                        <form action="/checkout/paypal" method="POST">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button type="submit" id="paypalButton" class="button button-paypal is-fullwidth" disabled>
+                                <span class="icon"><i class="fab fa-paypal"></i></span>
+                                <span>Checkout with PayPal</span>
+                            </button>
+                        </form>
+                        <% } %>
+
+                        <% if (config.Payments.Stripe.Enabled) { %>
+                        <form action="/checkout/stripe" method="POST">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button type="submit" id="stripeButton" class="button button-stripe is-fullwidth" disabled>
+                                <span class="icon"><i class="fab fa-stripe"></i></span>
+                                <span>Checkout using card</span>
+                            </button>
+                        </form>
+                        <% } %>
+
+                        <% if (config.Payments.Coinbase.Enabled) { %>
+                        <form action="/checkout/coinbase" method="POST">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button type="submit" id="cryptoButton" class="button button-crypto is-fullwidth" disabled>
+                                <span class="icon"><i class="fas fa-coins"></i></span>
+                                <span>Checkout with Coinbase</span>
+                            </button>
+                        </form>
+                        <% } %>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <%- include('partials/footer') %>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            const paypalButton = document.getElementById('paypalButton');
+            const stripeButton = document.getElementById('stripeButton');
+            const cryptoButton = document.getElementById('cryptoButton');
+
+            termsCheckbox.addEventListener('change', function () {
+                const isChecked = termsCheckbox.checked;
+                if (paypalButton) paypalButton.disabled = !isChecked;
+                if (stripeButton) stripeButton.disabled = !isChecked;
+                if (cryptoButton) cryptoButton.disabled = !isChecked;
+            });
+        });
+    </script>
+</body>
+</html>

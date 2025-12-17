@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Panel | Page Customization</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+    <style>
+        :root {
+            --primary-color: #0d1117;
+            --secondary-color: <%= settings.accentColor %>;
+            --accent-color: <%= settings.accentColor %>;
+            --accent-color-rgb: <%= accentColorRgb %>;
+            --text-color: #c9d1d9;
+            --title-color: #ffffff;
+            --subtitle-color: #8b949e;
+            --sections-bg-color: #161b22;
+            --sections-subtitle-color: #ffffff;
+            --footer-bg-color: #161b22;
+            --button-discord-color: #7289da;
+            --amount-color: <%= settings.accentColor %>;
+            --position-color: #8b949e;
+            --input-background: #21262d;
+            --input-text-color: #c9d1d9;
+            --label-color: #ffffff;
+            --checkbox-text-color: #c9d1d9;
+            --card-background: #1b1f27;
+            --card-border: #2c313a;
+        }
+
+        html {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .staff-panel {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .title.is-spaced {
+            color: var(--title-color);
+        }
+
+        h1.title {
+            color: var(--title-color) !important;
+        }
+
+        .subtitle {
+            color: var(--subtitle-color);
+        }
+
+        .button.is-info {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .button.is-info:hover,
+        .button.is-info:focus {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            box-shadow: none;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card .card-title {
+            font-size: 1.25rem;
+            color: var(--title-color);
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .divider {
+            margin: 20px 0;
+            height: 1px;
+            background-color: var(--card-border);
+        }
+
+        .textarea {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+        }
+
+        .textarea::placeholder {
+            color: var(--position-color);
+        }
+
+        .input {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+        }
+
+        .input::placeholder {
+            color: var(--position-color);
+        }
+
+        .select select {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+            border-radius: 4px;
+            padding: 5px;
+            font-family: inherit;
+        }
+
+        .select select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        .field.has-addons .control {
+            margin-right: 10px;
+            flex: 1;
+        }
+
+        .label {
+            color: var(--label-color);
+        }
+
+        .checkbox {
+            color: var(--checkbox-text-color);
+        }
+
+        .checkbox input[type="checkbox"]:hover {
+            background-color: transparent;
+            border-color: transparent;
+        }
+
+        .checkbox:hover {
+            background-color: transparent;
+            color: var(--checkbox-text-color);
+        }
+
+        .help.is-info {
+            color: var(--accent-color);
+            font-size: 0.7rem;
+        }
+
+        input[type="file"] {
+            color: var(--text-color);
+            background-color: var(--input-background);
+            border: 1px solid var(--accent-color);
+            border-radius: 4px;
+            padding: 5px;
+            font-family: inherit;
+        }
+
+        input[type="color"] {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            height: 32px;
+            width: 100%;
+            padding: 0;
+        }
+
+        .custom-nav-tabs {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .custom-nav-tabs .control {
+            flex-grow: 1;
+        }
+
+        .custom-nav-tabs .buttons {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .add-new-tab-button {
+            margin-top: 20px;
+        }
+
+        .collapsible-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .collapsible-content.is-active {
+            display: block;
+        }
+
+        .collapsible-toggle {
+            cursor: pointer;
+            color: var(--accent-color);
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        
+
+        .collapsible-toggle i {
+            transition: transform 0.3s ease;
+        }
+
+        .collapsible-toggle.is-active i {
+            transform: rotate(180deg);
+        }
+
+        .hint {
+    font-size: 0.9rem;
+    font-weight: normal;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    color: var(--subtitle-color);
+    text-align: left;
+    padding-left: 15px;
+}
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/navbar', { user, existingUser }) %>
+
+    <div class="staff-panel">
+        <%- include('../partials/staff-navbar', { user, currentPage: 'page-customization' }) %>
+
+        <div class="content">
+            <section class="section">
+                <h1 class="title">Page Customization</h1>
+                <p class="subtitle">Customize the text and features on different pages.</p>
+                
+
+                <form action="/staff/page-customization?_csrf=<%= encodeURIComponent(csrfToken) %>" method="POST">
+
+                    <div class="card">
+                        <div class="card-title">Font Customization</div>
+                        <div class="field">
+                            <label class="label">Choose Font Family</label>
+                            <div class="control">
+                                <input class="input" type="text" name="fontSelector" value="<%= settings.websiteFont %>" placeholder="Enter font family">
+                            </div>
+                            <p class="help is-info">Enter the font family you want to use (e.g., 'Roboto', 'Arial').</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title collapsible-toggle" onclick="toggleCollapsibleContent(this)">
+                            Page Text Customization
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="hint">(Click to expand/collapse)</div>
+                        <div class="collapsible-content">
+                            <div class="field">
+                                <label class="label">Home Page</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="homePageTitle" value="<%= settings.homePageTitle %>" required placeholder="Title">
+                                </div>
+                                <div class="control" style="margin-top: 10px;">
+                                    <input class="input" type="text" name="homePageSubtitle" value="<%= settings.homePageSubtitle %>" required placeholder="Subtitle">
+                                </div>
+                            </div>
+                    
+                            <hr class="divider">
+                    
+                            <div class="field">
+                                <label class="label">Products Page</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="productsPageTitle" value="<%= settings.productsPageTitle %>" required placeholder="Title">
+                                </div>
+                                <div class="control" style="margin-top: 10px;">
+                                    <input class="input" type="text" name="productsPageSubtitle" value="<%= settings.productsPageSubtitle %>" required placeholder="Subtitle">
+                                </div>
+                            </div>
+                    
+                            <hr class="divider">
+                    
+                            <div class="field">
+                                <label class="label">Reviews Page</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="reviewsPageTitle" value="<%= settings.reviewsPageTitle %>" required placeholder="Title">
+                                </div>
+                                <div class="control" style="margin-top: 10px;">
+                                    <input class="input" type="text" name="reviewsPageSubtitle" value="<%= settings.reviewsPageSubtitle %>" required placeholder="Subtitle">
+                                </div>
+                            </div>
+                    
+                            <hr class="divider">
+                    
+                            <div class="field">
+                                <label class="label">Terms of Service Page</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="tosPageTitle" value="<%= settings.tosPageTitle %>" required placeholder="Title">
+                                </div>
+                                <div class="control" style="margin-top: 10px;">
+                                    <input class="input" type="text" name="tosPageSubtitle" value="<%= settings.tosPageSubtitle %>" required placeholder="Subtitle">
+                                </div>
+                            </div>
+                    
+                            <div class="field">
+                                <label class="label">Privacy Policy Page</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="privacyPolicyPageTitle" value="<%= settings.privacyPolicyPageTitle %>" required placeholder="Title">
+                                </div>
+                                <div class="control" style="margin-top: 10px;">
+                                    <input class="input" type="text" name="privacyPolicyPageSubtitle" value="<%= settings.privacyPolicyPageSubtitle %>" required placeholder="Subtitle">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title collapsible-toggle" onclick="toggleCollapsibleContent(this)">
+                            Home Page Feature Boxes
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="hint">(Click to expand/collapse)</div>
+                        <div class="collapsible-content">
+                            <% settings.features.forEach(function(feature, index) { %>
+                            <div class="field">
+                                <label class="label">Feature <%= index + 1 %> Icon</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="features[<%= index %>][icon]" value="<%= feature.icon %>" placeholder="Icon class (e.g., fas fa-user-friends)" required>
+                                    <p class="help is-info">Use FontAwesome icons. Example: "fas fa-user-friends".</p>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Feature <%= index + 1 %> Title</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="features[<%= index %>][title]" value="<%= feature.title %>" placeholder="Feature title" required>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Feature <%= index + 1 %> Description</label>
+                                <div class="control">
+                                    <textarea class="textarea" name="features[<%= index %>][description]" rows="3" placeholder="Feature description" required><%= feature.description %></textarea>
+                                </div>
+                            </div>
+
+                            <hr class="divider">
+                            <% }); %>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Custom Navbar Tabs</div>
+                        <p class="help is-info">Add custom tabs to the navigation bar. Provide a name and the URL it should redirect to.</p>
+
+                        <div id="custom-nav-tabs">
+                            <% settings.customNavTabs.forEach(function(tab, index) { %>
+                            <div class="field custom-nav-tabs">
+                                <div class="control is-expanded">
+                                    <input class="input" type="text" name="customNavTabs[<%= index %>][name]" placeholder="Tab Name" value="<%= tab.name %>" required>
+                                </div>
+                                <div class="control is-expanded">
+                                    <input class="input" type="text" name="customNavTabs[<%= index %>][link]" placeholder="Tab Link (e.g., https://google.com)" value="<%= tab.link %>" required>
+                                </div>
+                                <div class="buttons">
+                                    <button type="button" class="button is-danger" onclick="removeNavTab(this)">Remove Tab</button>
+                                </div>
+                            </div>
+                            <% }); %>
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <button type="button" class="button is-info add-new-tab-button" onclick="addNavTab()">Add New Tab</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title collapsible-toggle" onclick="toggleCollapsibleContent(this)">
+                            Footer Customization
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="hint">(Click to expand/collapse)</div>
+                        <div class="collapsible-content">
+                            <!-- Footer Description -->
+                            <div class="field">
+                                <label class="label">Footer Description</label>
+                                <div class="control">
+                                    <textarea class="textarea" name="footerDescription" rows="4" placeholder="Enter footer description here..." required><%= settings.footerDescription %></textarea>
+                                </div>
+                            </div>
+                            <hr class="divider">
+                    
+                            <!-- Custom Footer Tabs -->
+                            <p class="help is-info">Add custom tabs to the footer. Provide a name and the URL it should redirect to.</p>
+                            <div id="custom-footer-tabs">
+                                <% settings.customFooterTabs.forEach(function(tab, index) { %>
+                                <div class="field custom-nav-tabs">
+                                    <div class="control is-expanded">
+                                        <input class="input" type="text" name="customFooterTabs[<%= index %>][name]" placeholder="Tab Name" value="<%= tab.name %>" required>
+                                    </div>
+                                    <div class="control is-expanded">
+                                        <input class="input" type="text" name="customFooterTabs[<%= index %>][link]" placeholder="Tab Link (e.g., https://google.com)" value="<%= tab.link %>" required>
+                                    </div>
+                                    <div class="buttons">
+                                        <button type="button" class="button is-danger" onclick="removeFooterTab(this)">Remove Tab</button>
+                                    </div>
+                                </div>
+                                <% }); %>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <button type="button" class="button is-info add-new-tab-button" onclick="addFooterTab()">Add New Tab</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <button type="submit" class="button is-info">Save Customization</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+    <script>
+        function addNavTab() {
+            const index = document.querySelectorAll('#custom-nav-tabs .field').length;
+            const fieldHTML = `
+            <div class="field is-grouped is-grouped-multiline custom-nav-tabs">
+                <div class="control is-expanded">
+                    <input class="input" type="text" name="customNavTabs[${index}][name]" placeholder="Tab Name" required>
+                </div>
+                <div class="control is-expanded">
+                    <input class="input" type="text" name="customNavTabs[${index}][link]" placeholder="Tab Link (e.g., https://google.com)" required>
+                </div>
+                <div class="buttons">
+                    <button type="button" class="button is-danger" onclick="removeNavTab(this)">Remove Tab</button>
+                </div>
+            </div>`;
+            document.getElementById('custom-nav-tabs').insertAdjacentHTML('beforeend', fieldHTML);
+        }
+
+        function removeNavTab(button) {
+            button.closest('.field').remove();
+        }
+
+        function addFooterTab() {
+            const index = document.querySelectorAll('#custom-footer-tabs .field').length;
+            const fieldHTML = `
+            <div class="field is-grouped is-grouped-multiline custom-footer-tabs">
+                <div class="control is-expanded">
+                    <input class="input" type="text" name="customFooterTabs[${index}][name]" placeholder="Tab Name" required>
+                </div>
+                <div class="control is-expanded">
+                    <input class="input" type="text" name="customFooterTabs[${index}][link]" placeholder="Tab Link (e.g., https://google.com)" required>
+                </div>
+                <div class="buttons">
+                    <button type="button" class="button is-danger" onclick="removeFooterTab(this)">Remove Tab</button>
+                </div>
+            </div>`;
+            document.getElementById('custom-footer-tabs').insertAdjacentHTML('beforeend', fieldHTML);
+        }
+
+        function removeFooterTab(button) {
+            button.closest('.field').remove();
+        }
+
+        function toggleCollapsibleContent(element) {
+    const content = element.parentElement.querySelector('.collapsible-content');
+    if (content) {
+        content.classList.toggle('is-active');
+        element.classList.toggle('is-active');
+    }
+}
+    </script>
+</body>
+
+</html>

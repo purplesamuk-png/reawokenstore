@@ -1,0 +1,128 @@
+<style>
+    .footer {
+        background: linear-gradient(135deg, #0d1117, #161b22);
+        color: #c9d1d9;
+        padding: 3rem 1.5rem;
+        font-size: 0.9rem;
+        border-top: 2px solid <%= settings.accentColor %>;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .footer-column {
+        text-align: left;
+    }
+
+    .footer-column h4 {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #ffffff;
+        border-bottom: 1px solid #c9d1d9;
+        padding-bottom: 0.5rem;
+    }
+
+    .footer-column ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer-column ul li {
+        margin-bottom: 0.5rem;
+    }
+
+    .footer-column ul li a {
+        color: #c9d1d9;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .footer-column ul li a:hover {
+        color: <%= settings.accentColor %>;
+    }
+
+    .footer-bottom {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #c9d1d9;
+        font-size: 0.8rem;
+    }
+
+    .payment-logos {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1rem;
+        margin-bottom: -1rem;
+    }
+
+    .payment-logos img {
+        height: 40px;
+        width: auto;
+        transition: transform 0.3s ease;
+    }
+
+    .payment-logos img:hover {
+        transform: scale(1.1);
+    }
+</style>
+
+<footer id="contact" class="footer">
+    <div class="footer-grid">
+        <div class="footer-column">
+            <h4><%= settings.storeName %></h4>
+            <p><%= settings.footerDescription %></p>
+        </div>
+
+        <div class="footer-column">
+            <h4>Navigation</h4>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/reviews">Reviews</a></li>
+                <li><a href="/profile">Profile</a></li>
+                <% if (settings.customFooterTabs && settings.customFooterTabs.length > 0) { %>
+                    <% settings.customFooterTabs.forEach(function(tab, index) { %>
+                        <li><a href="<%= tab.link %>"><%= tab.name %></a></li>
+                    <% }); %>
+                <% } %>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h4>Legal</h4>
+            <ul>
+                <li><a href="/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/tos">Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; <span id="currentYear"></span> <%= settings.storeName %>. All rights reserved.</p>
+        <div class="payment-logos">
+            <% if (config.Payments.PayPal.Enabled) { %>
+                <img src="/images/paypal.png" alt="PayPal">
+            <% } %>
+            <% if (config.Payments.Stripe.Enabled) { %>
+                <img src="/images/card.png" alt="Card Payments">
+                <img src="/images/visa.png" alt="Visa">
+            <% } %>
+            <% if (config.Payments.Coinbase.Enabled) { %>
+                <img src="/images/coinbase.png" alt="Coinbase">
+            <% } %>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+</script>

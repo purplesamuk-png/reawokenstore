@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Panel | Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+    <style>
+        :root {
+            --primary-color: #0d1117;
+            --secondary-color: <%= settings.accentColor %>;
+            --accent-color: <%= settings.accentColor %>;
+            --accent-color-rgb: <%= accentColorRgb %>;
+            --text-color: #c9d1d9;
+            --title-color: #ffffff;
+            --subtitle-color: #8b949e;
+            --sections-bg-color: #161b22;
+            --sections-subtitle-color: #ffffff;
+            --footer-bg-color: #161b22;
+            --button-discord-color: #7289da;
+            --amount-color: <%= settings.accentColor %>;
+            --position-color: #8b949e;
+            --input-background: #21262d;
+            --input-text-color: #c9d1d9;
+            --label-color: #ffffff;
+            --checkbox-text-color: #c9d1d9;
+            --card-background: #1b1f27;
+            --card-border: #2c313a;
+        }
+
+        html {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .staff-panel {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .title.is-spaced {
+            color: var(--title-color);
+        }
+
+        h1.title {
+            color: var(--title-color) !important;
+        }
+
+        .subtitle {
+            color: var(--subtitle-color);
+        }
+
+        .button.is-info {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .button.is-info:hover,
+        .button.is-info:focus {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            box-shadow: none;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card .card-title {
+            font-size: 1.25rem;
+            color: var(--title-color);
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .divider {
+            margin: 20px 0;
+            height: 1px;
+            background-color: var(--card-border);
+        }
+
+        .textarea {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+        }
+
+        .textarea::placeholder {
+            color: var(--position-color);
+        }
+
+        .input {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+        }
+
+        .input::placeholder {
+            color: var(--position-color);
+        }
+
+        .select select {
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            border: 1px solid var(--subtitle-color);
+            border-radius: 4px;
+            padding: 5px;
+            font-family: inherit;
+        }
+
+        .select select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        .field.has-addons .control {
+            margin-right: 10px;
+            flex: 1;
+        }
+
+        .label {
+            color: var(--label-color);
+        }
+
+        .checkbox {
+            color: var(--checkbox-text-color);
+        }
+
+        .checkbox input[type="checkbox"]:hover {
+            background-color: transparent;
+            border-color: transparent;
+        }
+
+        .checkbox:hover {
+            background-color: transparent;
+            color: var(--checkbox-text-color);
+        }
+
+        .help.is-info {
+            color: var(--accent-color);
+            font-size: 0.7rem;
+        }
+
+        input[type="file"] {
+            color: var(--text-color);
+            background-color: var(--input-background);
+            border: 1px solid var(--accent-color);
+            border-radius: 4px;
+            padding: 5px;
+            font-family: inherit;
+        }
+
+        input[type="color"] {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            height: 32px;
+            width: 100%;
+            padding: 0;
+        }
+
+        .add-new-tab-button {
+            margin-top: 20px;
+        }
+
+        .collapsible-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .collapsible-content.is-active {
+            display: block;
+        }
+
+        .collapsible-toggle {
+            cursor: pointer;
+            color: var(--accent-color);
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .collapsible-toggle i {
+            transition: transform 0.3s ease;
+        }
+
+        .collapsible-toggle.is-active i {
+            transform: rotate(180deg);
+        }
+
+    .api-doc-link {
+    text-decoration: underline;
+    color: inherit;
+}
+
+.api-doc-link:hover {
+    text-decoration: underline;
+    color: inherit;
+    background-color: transparent;
+}
+
+.category-item {
+    margin-bottom: 10px;
+}
+
+.visibility-settings-title {
+    color: var(--title-color) !important;
+    font-weight: bold;
+}
+
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/navbar', { user, existingUser }) %>
+
+    <div class="staff-panel">
+        <%- include('../partials/staff-navbar', { user, currentPage: 'settings' }) %>
+
+        <div class="content">
+            <section class="section">
+                <h1 class="title">Settings</h1>
+                <p class="subtitle">Manage general settings for the website/store.</p>
+
+                <form action="/staff/settings?_csrf=<%= encodeURIComponent(csrfToken) %>" method="POST" enctype="multipart/form-data">
+
+                    <div class="columns">
+                        <div class="column is-8">
+                            <div class="card">
+                                <div class="card-title">General Information</div>
+
+                                <div class="field">
+                                    <label class="label">Store Name</label>
+                                    <div class="control">
+                                        <input class="input" type="text" name="storeName" value="<%= settings.storeName %>" required placeholder="Enter store name">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Payment Currency</label>
+                                    <div class="control">
+                                        <div class="select">
+                                            <select name="paymentCurrency" required>
+                                                <option value="USD" <% if (settings.paymentCurrency === 'USD') { %>selected<% } %>>USD ($)</option>
+                                                <option value="EUR" <% if (settings.paymentCurrency === 'EUR') { %>selected<% } %>>EUR (€)</option>
+                                                <option value="GBP" <% if (settings.paymentCurrency === 'GBP') { %>selected<% } %>>GBP (£)</option>
+                                                <option value="JPY" <% if (settings.paymentCurrency === 'JPY') { %>selected<% } %>>JPY (¥)</option>
+                                                <option value="AUD" <% if (settings.paymentCurrency === 'AUD') { %>selected<% } %>>AUD (A$)</option>
+                                                <option value="CAD" <% if (settings.paymentCurrency === 'CAD') { %>selected<% } %>>CAD (C$)</option>
+                                                <option value="CHF" <% if (settings.paymentCurrency === 'CHF') { %>selected<% } %>>CHF (CHF)</option>
+                                                <option value="CNY" <% if (settings.paymentCurrency === 'CNY') { %>selected<% } %>>CNY (¥)</option>
+                                                <option value="SEK" <% if (settings.paymentCurrency === 'SEK') { %>selected<% } %>>SEK (kr)</option>
+                                                <option value="NZD" <% if (settings.paymentCurrency === 'NZD') { %>selected<% } %>>NZD (NZ$)</option>
+                                                <option value="SGD" <% if (settings.paymentCurrency === 'SGD') { %>selected<% } %>>SGD (S$)</option>
+                                                <option value="HKD" <% if (settings.paymentCurrency === 'HKD') { %>selected<% } %>>HKD (HK$)</option>
+                                                <option value="NOK" <% if (settings.paymentCurrency === 'NOK') { %>selected<% } %>>NOK (kr)</option>
+                                                <option value="KRW" <% if (settings.paymentCurrency === 'KRW') { %>selected<% } %>>KRW (₩)</option>
+                                                <option value="TRY" <% if (settings.paymentCurrency === 'TRY') { %>selected<% } %>>TRY (₺)</option>
+                                                <option value="RUB" <% if (settings.paymentCurrency === 'RUB') { %>selected<% } %>>RUB (₽)</option>
+                                                <option value="INR" <% if (settings.paymentCurrency === 'INR') { %>selected<% } %>>INR (₹)</option>
+                                                <option value="BRL" <% if (settings.paymentCurrency === 'BRL') { %>selected<% } %>>BRL (R$)</option>
+                                                <option value="ZAR" <% if (settings.paymentCurrency === 'ZAR') { %>selected<% } %>>ZAR (R)</option>
+                                                <option value="MYR" <% if (settings.paymentCurrency === 'MYR') { %>selected<% } %>>MYR (RM)</option>
+                                                <option value="THB" <% if (settings.paymentCurrency === 'THB') { %>selected<% } %>>THB (฿)</option>
+                                                <option value="PLN" <% if (settings.paymentCurrency === 'PLN') { %>selected<% } %>>PLN (zł)</option>
+                                                <option value="PHP" <% if (settings.paymentCurrency === 'PHP') { %>selected<% } %>>PHP (₱)</option>
+                                                <option value="HUF" <% if (settings.paymentCurrency === 'HUF') { %>selected<% } %>>HUF (Ft)</option>
+                                                <option value="CZK" <% if (settings.paymentCurrency === 'CZK') { %>selected<% } %>>CZK (Kč)</option>
+                                                <option value="ILS" <% if (settings.paymentCurrency === 'ILS') { %>selected<% } %>>ILS (₪)</option>
+                                                <option value="DKK" <% if (settings.paymentCurrency === 'DKK') { %>selected<% } %>>DKK (kr)</option>
+                                                <option value="AED" <% if (settings.paymentCurrency === 'AED') { %>selected<% } %>>AED (د.إ)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Sales Tax (%) (Optional)</label>
+                                    <div class="control">
+                                        <input class="input" type="number" name="salesTax" min="0" max="100" value="<%= settings.salesTax || '' %>" placeholder="Enter sales tax percentage">
+                                    </div>
+                                </div>
+                                
+                                <div class="field">
+                                    <label class="label">Discord Logging Channel</label>
+                                    <div class="control">
+                                        <div class="select">
+                                            <select id="discordLoggingChannel" name="discordLoggingChannel">
+                                                <% if (!settings.discordLoggingChannel || settings.discordLoggingChannel === '') { %>
+                                                    <option value="" selected>Select a channel</option>
+                                                <% } else { %>
+                                                    <option value="">Select a channel</option>
+                                                <% } %>
+                                                <% discordChannels.forEach(channel => { %>
+                                                    <option value="<%= channel.id %>" <% if (settings.discordLoggingChannel === channel.id) { %>selected<% } %>>
+                                                        <%= channel.name %> (<%= channel.id %>)
+                                                    </option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Terms of Service</label>
+                                    <p class="help is-info">Supports Markdown</p>
+                                    <div class="control">
+                                        <textarea class="textarea" name="termsOfService" rows="6" required><%= settings.termsOfService %></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Privacy Policy</label>
+                                    <p class="help is-info">Supports Markdown</p>
+                                    <div class="control">
+                                        <textarea class="textarea" name="privacyPolicy" rows="6" required><%= settings.privacyPolicy %></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">About Us Text</label>
+                                    <p class="help is-info">Supports Markdown</p>
+                                    <div class="control">
+                                        <textarea class="textarea" name="aboutUsText" rows="6" required><%= settings.aboutUsText %></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title">Reviews</div>
+
+                                <div class="field">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="sendReviewsToDiscord" value="true" <% if (settings.sendReviewsToDiscord) { %>checked<% } %>>
+                                        Enable sending reviews to Discord channel
+                                    </label>
+                                </div>
+                                <div class="field">
+                                    <label class="label">Discord Review Channel</label>
+                                    <div class="control">
+                                        <div class="select">
+                                            <select name="discordReviewChannel">
+                                                <% if (!settings.discordReviewChannel || settings.discordReviewChannel === '') { %>
+                                                    <option value="" selected>Select a channel</option>
+                                                <% } else { %>
+                                                    <option value="">Select a channel</option>
+                                                <% } %>
+                                                <% discordChannels.forEach(channel => { %>
+                                                    <option value="<%= channel.id %>" <% if (settings.discordReviewChannel === channel.id) { %>selected<% } %>>
+                                                        <%= channel.name %> (<%= channel.id %>)
+                                                    </option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Minimum Review Length</label>
+                                    <div class="control">
+                                        <input class="input" type="number" name="minimumReviewLength" min="10" value="<%= settings.minimumReviewLength || 30 %>" required placeholder="Enter minimum review length">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="allowReviewDeletion" value="true" <% if (settings.allowReviewDeletion) { %>checked<% } %>>
+                                        Allow users to delete their reviews after posting
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        
+                        <div class="column is-4">
+                            <div class="card">
+                                <div class="card-title">Visibility Settings</div>
+                            
+                                <!-- Home Page Settings -->
+                                <h3 class="subtitle is-5 visibility-settings-title" style="margin-top: 15px;">Home Page</h3>
+                                <div class="field">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="aboutUsVisible" value="true" <% if (settings.aboutUsVisible) { %>checked<% } %> >
+                                        Display About Us section on the homepage
+                                    </label>
+                                </div>
+                                <div class="field">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="displayStats" value="true" <% if (settings.displayStats) { %>checked<% } %> >
+                                        Display statistics on the homepage
+                                    </label>
+                                </div>
+                                <div class="field">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="displayReviews" value="true" <% if (settings.displayReviews) { %>checked<% } %> >
+                                        Display random reviews on the homepage
+                                    </label>
+                                </div>
+                                <div class="field">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="displayFeatures" value="true" <% if (settings.displayFeatures) { %>checked<% } %> >
+                                        Display feature cards on the homepage
+                                    </label>
+                                </div>
+                                <div class="field">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="displayCTABanner" value="true" <% if (settings.displayCTABanner) { %>checked<% } %> >
+                                        Display CTA banner on the homepage
+                                    </label>
+                                </div>
+                            
+                                <hr class="divider">
+                            
+                                <!-- Products Page Settings -->
+                                <h3 class="subtitle is-5 visibility-settings-title">Product Page</h3>
+                                <div class="field">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="displayProductReviews" value="true" <% if (settings.displayProductReviews) { %>checked<% } %> >
+                                        Show customer reviews on individual product pages
+                                    </label>
+                                </div>
+                        
+                                <hr class="divider">
+
+                                <!-- Misc Settings -->
+                                <h3 class="subtitle is-5 visibility-settings-title">Misc</h3>
+                                <div class="field">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="backgroundGradient" value="true" <% if (settings.backgroundGradient) { %>checked<% } %> >
+                                        Use gradient background instead of background image
+                                    </label>
+                                </div>
+
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title">File Uploads</div>
+
+                                <div class="field">
+                                    <label class="label">Upload Logo <span class="help is-info">(.jpg, .png)</span></label>
+                                    <div class="control">
+                                        <input class="input" type="file" name="logo" accept=".jpg,.png">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Upload Favicon <span class="help is-info">(.ico)</span></label>
+                                    <div class="control">
+                                        <input class="input" type="file" name="favicon" accept=".ico">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Upload Background Image <span class="help is-info">(.jpg, .png)</span></label>
+                                    <div class="control">
+                                        <input class="input" type="file" name="backgroundImage" accept=".jpg,.png">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title">Customization</div>
+
+                                <div class="field">
+                                    <label class="label">Accent Color</label>
+                                    <div class="control">
+                                        <input type="color" name="accentColor" value="<%= settings.accentColor %>">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Discord Invite Link</label>
+                                    <div class="control">
+                                        <input class="input" type="text" name="discordInviteLink" value="<%= settings.discordInviteLink %>" placeholder="https://discord.gg/your-invite-link">
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label">Site Banner Text</label>
+                                    <p class="help is-info">Set a notice or announcement text that appears at the top of the page. Leave empty to disable the banner.</p>
+                                    <div class="control">
+                                        <input class="input" type="text" name="siteBannerText" value="<%= settings.siteBannerText %>" placeholder="Enter banner text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">API Settings</div>
+                    
+                        <div class="field">
+                            <label class="checkbox">
+                                <input type="checkbox" name="apiEnabled" value="true" <% if (settings.apiEnabled) { %>checked<% } %> >
+                                Enable API
+                            </label>
+                        </div>
+                    
+                        <div class="field">
+                            <p class="help is-info">This is a private key and should not be shared with anyone. The API Key is used for making API calls to Plex Store, such as getting information about certain users and checking product ownership. It can be any string you choose, but make sure it is secure (e.g., a long and complex password-like string)
+                            </p>
+                            <div class="control">
+                                <input class="input" type="text" name="apiKey" value="<%= settings.apiKey || '' %>" placeholder="Enter API Key">
+                            </div>
+                        </div>
+                    
+                        <div class="field">
+                            <p class="help is-info">You can find documentation on the API in our <a class="api-doc-link" href="https://docs.plexdevelopment.net/plex-store/api" target="_blank">docs page</a>.</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Product Categories</div>
+                
+                        <div class="field is-grouped">
+                            <div class="control is-expanded">
+                                <input class="input" type="text" id="categoryName" placeholder="Category Name">
+                            </div>
+                            <div class="control is-expanded">
+                                <input class="input" type="text" id="categoryUrl" placeholder="Category URL (e.g., /category-name)">
+                            </div>
+                            <div class="control">
+                                <button type="button" class="button is-info" id="addCategoryButton">Add Category</button>
+                            </div>
+                        </div>
+                
+                        <div class="divider"></div>
+                
+                        <div id="categoryList">
+                            <% settings.productCategories.forEach(category => { %>
+                            <div class="field is-grouped category-item">
+                                <div class="control is-expanded">
+                                    <input class="input" type="text" value="<%= category.name %>" readonly>
+                                </div>
+                                <div class="control is-expanded">
+                                    <input class="input" type="text" value="<%= category.url %>" readonly>
+                                </div>
+                                <div class="control">
+                                    <button type="button" class="button is-danger delete-category-button" data-id="<%= category._id %>">Delete</button>
+                                </div>
+                            </div>
+                            <% }); %>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">SEO Settings</div>
+                    
+                        <div class="field">
+                            <label class="label">SEO Title</label>
+                            <div class="control">
+                                <input class="input" type="text" name="seoTitle" value="<%= settings.seoTitle %>" placeholder="Enter SEO title" required>
+                            </div>
+                        </div>
+                    
+                        <div class="field">
+                            <label class="label">SEO Description</label>
+                            <div class="control">
+                                <textarea class="textarea" name="seoDescription" rows="3" placeholder="Enter SEO description" required><%= settings.seoDescription %></textarea>
+                            </div>
+                        </div>
+                    
+                        <div class="field">
+                            <label class="label">SEO Tags</label>
+                            <div class="control">
+                                <input class="input" type="text" name="seoTags" value="<%= settings.seoTags %>" placeholder="Enter SEO tags, separated by commas" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <button type="submit" class="button is-info">Save Settings</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addCategoryButton = document.getElementById('addCategoryButton');
+    const categoryList = document.getElementById('categoryList');
+    const categoryNameInput = document.getElementById('categoryName');
+    const categoryUrlInput = document.getElementById('categoryUrl');
+    
+    function updateCategoriesInput() {
+    const categories = [];
+    categoryList.querySelectorAll('.category-item').forEach(item => {
+        const name = item.querySelector('input[type="text"]').value;
+        const url = item.querySelectorAll('input[type="text"]')[1].value;
+        const category = { name, url };
+
+        // Check if this category already exists
+        if (!categories.some(cat => cat.name === category.name && cat.url === category.url)) {
+            categories.push(category);
+        }
+    });
+
+    // Remove existing hidden input if any to avoid duplication
+    const existingCategoriesInput = document.querySelector('input[name="categories"]');
+    if (existingCategoriesInput) {
+        existingCategoriesInput.remove();
+    }
+
+    const categoriesInput = document.createElement('input');
+    categoriesInput.type = 'hidden';
+    categoriesInput.name = 'categories';
+    categoriesInput.value = JSON.stringify(categories);
+    document.querySelector('form').appendChild(categoriesInput);
+}
+    
+addCategoryButton.addEventListener('click', function() {
+    const name = categoryNameInput.value.trim();
+    const url = categoryUrlInput.value.trim();
+    
+    // Check if the category already exists
+    const exists = Array.from(categoryList.querySelectorAll('.category-item input[type="text"]')).some(input => input.value === name || input.value === url);
+    
+    if (name && url && !exists) {
+        const categoryItem = document.createElement('div');
+        categoryItem.classList.add('field', 'is-grouped', 'category-item');
+        categoryItem.innerHTML = `
+            <div class="control is-expanded">
+                <input class="input" type="text" value="${name}" readonly>
+            </div>
+            <div class="control is-expanded">
+                <input class="input" type="text" value="${url}" readonly>
+            </div>
+            <div class="control">
+                <button type="button" class="button is-danger delete-category-button">Delete</button>
+            </div>
+        `;
+        
+        categoryList.appendChild(categoryItem);
+        
+        categoryNameInput.value = '';
+        categoryUrlInput.value = '';
+        
+        updateCategoriesInput();
+    }
+});
+    
+    categoryList.addEventListener('click', function(e) {
+        if (e.target.classList.contains('delete-category-button')) {
+            e.target.closest('.category-item').remove();
+            updateCategoriesInput();
+        }
+    });
+});
+
+        </script>
+        
+
+</body>
+
+</html>

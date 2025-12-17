@@ -1,0 +1,489 @@
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<style>
+  html,
+  body {
+    font-family: '<%= settings.websiteFont || 'Rubik' %>', sans-serif;
+  }
+
+  .banner {
+    background-color: var(--primary-color);
+    color: var(--accent-color);
+    padding: 15px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-bottom: 2px solid var(--accent-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+    border-radius: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: var(--primary-color);
+  }
+
+  .navbar.is-dark {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+  }
+
+  .custom-navbar {
+    background-color: var(--primary-color);
+    border-bottom: 2px solid var(--accent-color);
+    min-height: 70px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  .custom-navbar .navbar-brand {
+    display: flex;
+    align-items: center;
+  }
+
+  .custom-navbar .navbar-end .navbar-item {
+    background-color: transparent;
+    color: var(--text-color);
+    margin-right: 10px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .custom-navbar .navbar-end .navbar-item:hover {
+    color: var(--accent-color);
+  }
+
+  .navbar-menu {
+    background-color: var(--primary-color);
+  }
+
+  .navbar-menu .navbar-item {
+    color: var(--text-color);
+    padding: 12px 20px;
+    margin: 0 6px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    font-weight: 500;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    background-color: transparent;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-menu a.navbar-item:not(.cart-container):not(.has-dropdown):not(.auth-button):hover {
+    background-color: rgba(var(--accent-color-rgb), 0.1);
+  }
+
+  .navbar-burger {
+    color: var(--text-color);
+  }
+
+  .navbar-burger:hover {
+    color: var(--accent-color);
+  }
+
+  .navbar-burger.is-active {
+    color: var(--accent-color);
+  }
+
+  .navbar-logo {
+    max-width: 312px;
+    height: auto;
+  }
+
+  .avatar {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+  }
+
+  .navbar-dropdown {
+    display: none;
+    margin-top: 8px;
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .navbar-item.has-dropdown:hover .navbar-dropdown {
+    display: block;
+  }
+
+  .navbar-dropdown .navbar-item,
+  .navbar-dropdown .navbar-item:hover,
+  .navbar-dropdown .navbar-item:focus,
+  .navbar-dropdown .navbar-item:active {
+    background-color: var(--primary-color) !important;
+    color: var(--text-color) !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border: none !important;
+    transition: color 0.3s ease;
+  }
+
+  .navbar-dropdown .navbar-item:hover {
+    color: var(--accent-color) !important;
+  }
+
+  .navbar-link {
+    color: var(--text-color) !important;
+    background-color: var(--primary-color) !important;
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
+
+  .navbar-link:hover {
+    color: var(--accent-color) !important;
+    background-color: var(--primary-color) !important;
+    text-decoration: none;
+  }
+
+  .navbar-item.has-dropdown .navbar-link::after {
+    border-color: var(--accent-color);
+    transition: border-color 0.3s ease;
+  }
+
+  .navbar-item.has-dropdown .navbar-link:hover::after {
+    border-color: var(--accent-color);
+  }
+
+  .navbar-item.has-dropdown .navbar-link:hover {
+    background-color: var(--primary-color) !important;
+    color: var(--accent-color) !important;
+  }
+
+
+  .navbar-dropdown .navbar-item:focus {
+    outline: none;
+  }
+
+  .navbar-dropdown .navbar-item .icon {
+    margin-right: 8px;
+  }
+
+  .navbar-item.has-dropdown {
+    position: relative;
+  }
+
+  .navbar-end {
+    position: relative;
+  }
+
+  .navbar-menu .navbar-dropdown {
+    background-color: var(--primary-color);
+    border-radius: 6px;
+    padding: 10px 0;
+    margin-top: -2px;
+  }
+
+  .cart-container {
+    position: relative;
+    margin-right: 8px;
+  }
+
+  .cart-button {
+    background-color: var(--primary-color);
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    padding: 6px 16px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.1);
+    cursor: pointer;
+    color: var(--text-color);
+    position: relative;
+  }
+
+  .cart-button:hover {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 15px rgba(var(--accent-color-rgb), 0.3);
+    transform: translateY(-1px);
+    color: var(--primary-color);
+  }
+
+  .cart-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.2rem;
+  }
+
+  .cart-badge {
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+    border-radius: 50%;
+    padding: 0 6px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    border: 2px solid var(--primary-color);
+    min-width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+
+  .cart-button:hover .cart-badge {
+    background-color: var(--primary-color);
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+    transform: translateY(0) scale(1.1);
+  }
+
+  .auth-button {
+    background-color: var(--primary-color);
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    padding: 6px 16px;
+    min-width: 140px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(var(--accent-color-rgb), 0.1);
+    cursor: pointer;
+  }
+
+  .auth-button:hover {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 15px rgba(var(--accent-color-rgb), 0.3);
+    transform: translateY(-1px);
+  }
+
+  .auth-button .user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+  }
+
+  .auth-button:hover .user-info,
+  .auth-button:hover .dropdown-arrow {
+    color: var(--primary-color);
+  }
+
+
+  .auth-button .avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin: 0;
+  }
+
+  .auth-button .username {
+    font-weight: 500;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .auth-button .dropdown-arrow {
+    color: var(--text-color);
+    transition: color 0.3s ease;
+    margin-left: 8px;
+    font-size: 0.8rem;
+  }
+  .navbar-item .icon.ml-1 {
+  margin-left: 8px;
+  font-size: 0.8em;
+  color: var(--subtitle-color);
+}
+
+.navbar-item:hover .icon.ml-1 {
+  color: var(--accent-color);
+}
+
+@media (max-width: 768px) {
+ .navbar-item.has-dropdown {
+   cursor: pointer;
+ }
+ 
+ .navbar-item.has-dropdown .navbar-dropdown {
+   position: absolute;
+   width: 100%;
+   top: 100%;
+   left: 0;
+ }
+
+ .navbar-item.has-dropdown:hover .navbar-dropdown {
+   display: none;
+ }
+
+ .navbar-item.has-dropdown.is-active .navbar-dropdown {
+   display: block;
+ }
+}
+
+</style>
+
+<% if (settings?.siteBannerText && settings?.siteBannerText.length > 2) { %>
+<div class="banner">
+  <%= settings.siteBannerText %>
+</div>
+<% } %>
+
+<nav class="navbar custom-navbar">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarMenu" class="navbar-menu">
+    <div class="navbar-end">
+      <a class="navbar-item" href="/">Home</a>
+      <a class="navbar-item" href="/products">Products</a>
+      <a class="navbar-item" href="/reviews">Reviews</a>
+
+      <% if (settings.customNavTabs && settings.customNavTabs.length > 0) { %>
+        <% settings.customNavTabs.forEach(function(tab) { %>
+          <a class="navbar-item" href="<%= tab.link %>" target="_blank" rel="noopener noreferrer">
+            <%= tab.name %>
+            <span class="icon ml-1">
+              <i class="fas fa-external-link-alt"></i>
+            </span>
+          </a>
+        <% }); %>
+      <% } %>
+
+      <% if (user) { %>
+
+
+      <div class="navbar-item cart-container">
+        <a href="/cart" class="cart-button">
+          <span class="cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+            Cart
+          </span>
+          <span class="cart-badge">
+            <%= existingUser?.cart?.length || 0 %>
+          </span>
+        </a>
+      </div>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <div class="auth-button">
+          <div class="user-info">
+            <% if (user.avatar) { %>
+            <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.webp?size=240" alt="Avatar" class="avatar">
+            <% } else { %>
+            <span class="icon">
+              <i class="fas fa-user-circle"></i>
+            </span>
+            <% } %>
+            <span class="username"><%= user.username %></span>
+          </div>
+          <span class="dropdown-arrow">
+            <i class="fas fa-chevron-down"></i>
+          </span>
+        </div>
+
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="/profile/<%= user.id %>">
+            <span class="icon">
+              <i class="fas fa-user"></i>
+            </span>
+            Profile
+          </a>
+          <% if (isStaff) { %>
+          <a class="navbar-item" href="/staff/overview">
+            <span class="icon">
+              <i class="fas fa-cogs"></i>
+            </span>
+            Staff Panel
+          </a>
+          <% } %>
+          <a class="navbar-item" href="/logout">
+            <span class="icon">
+              <i class="fas fa-sign-out-alt"></i>
+            </span>
+            Logout
+          </a>
+        </div>
+      </div>
+      <% } else { %>
+      <a class="navbar-item" href="/login">
+        <div class="auth-button">
+          <div class="user-info">
+            <span class="icon">
+              <i class="fas fa-sign-in-alt"></i>
+            </span>
+            <span class="username">Sign In</span>
+          </div>
+        </div>
+      </a>
+      <% } %>
+
+    </div>
+  </div>
+</nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch('/api/cart/count')
+      .then((response) => response.json())
+      .then((data) => {
+        const cartBadge = document.querySelector('.cart-badge');
+        if (cartBadge && data.count !== undefined) {
+          cartBadge.textContent = data.count;
+        }
+      })
+      .catch((error) => console.error('Error fetching cart count:', error));
+
+const dropdowns = document.querySelectorAll('.navbar-item.has-dropdown');
+dropdowns.forEach(dropdown => {
+ dropdown.addEventListener('click', (e) => {
+   if (window.innerWidth <= 768) {
+     // Only toggle if clicking the button itself, not child elements
+     if (e.target.closest('.auth-button')) {
+       e.preventDefault();
+       dropdown.classList.toggle('is-active');
+     }
+   }
+ });
+});
+
+    // Toggle navbar burger menu
+    const navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+    if (navbarBurgers.length > 0) {
+      navbarBurgers.forEach(el => {
+        el.addEventListener('click', () => {
+          const target = el.dataset.target;
+          const $target = document.getElementById(target);
+          el.classList.toggle('is-active');
+          $target.classList.toggle('is-active');
+        });
+      });
+    }
+  });
+</script>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - <%= settings.storeName %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="<%= settings.faviconPath %>" type="image/x-icon">
+    <style>
+        :root {
+            --primary-color: #0d1117;
+            --secondary-color: <%= settings.accentColor %>;
+            --accent-color: <%= settings.accentColor %>;
+            --accent-color-rgb: <%= accentColorRgb %>;
+            --text-color: #c9d1d9;
+            --title-color: #ffffff;
+            --subtitle-color: #8b949e;
+            --sections-bg-color: #161b22;
+            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            --border-radius: 15px;
+            --success-color: #28a745;
+        }
+
+        body {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .section {
+            padding: 50px 20px;
+            position: relative;
+        }
+
+        .success-container {
+            max-width: 800px;
+            margin: auto;
+            background-color: var(--sections-bg-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            border: 2px solid var(--accent-color);
+            margin-bottom: 4rem;
+        }
+
+        .success-message h1 {
+            color: var(--success-color);
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            font-size: 1rem;
+            color: var(--subtitle-color);
+            margin-bottom: 5px;
+        }
+
+        .success-message p strong {
+            color: var(--title-color);
+        }
+
+        .divider {
+            margin: 20px auto;
+            height: 1px;
+            background-color: var(--subtitle-color);
+            width: 100%;
+        }
+
+        .order-details {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .order-details h2 {
+            font-size: 1.5rem;
+            color: var(--title-color);
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--sections-bg-color));
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .cart-item-title {
+            color: var(--title-color);
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .cart-item-price {
+            color: var(--accent-color);
+            font-size: 1rem;
+        }
+
+        .total-price {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .payment-date {
+            font-size: 0.9rem;
+            color: var(--subtitle-color);
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .button {
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .button-accent {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .button-accent:hover {
+            background-color: #ffffff;
+            color: var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-back {
+            background-color: var(--success-color);
+            color: #ffffff;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .button-back:hover {
+            background-color: #ffffff;
+            color: var(--success-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="fireworks"></canvas>
+
+    <%- include('partials/navbar', { user, existingUser }) %>
+
+    <section class="section">
+        <div class="container">
+            <div class="success-container">
+                <div class="success-message">
+                    <h1>Payment Successful</h1>
+                    <p>Thank you for your purchase! Your transaction has been successfully processed.</p>
+                    <div class="divider"></div>
+                    <p class="transaction-id"><strong>Transaction ID:</strong> <%= transactionId %></p>
+                    <p><strong>Username:</strong> <%= user.username %> <em>(<%= user.id %>)</em></p>
+                    <p><strong>Email:</strong> <%= email %></p>
+                </div>
+
+                <div class="order-details">
+                    <h2>Order Details</h2>
+                    <% cartProducts.forEach(product => { %>
+                    <div class="cart-item">
+                        <div class="cart-item-title"><%= product.name %></div>
+                        <div class="cart-item-price">
+                            <% if (product.salePrice) { %>
+                                <span style="color: var(--accent-color); font-weight: bold;">
+                                    <%= settings.currencySymbol %><%= product.salePrice.toFixed(2) %>
+                                </span>
+                                <span style="text-decoration: line-through; font-style: italic; color: var(--subtitle-color); margin-left: 10px;">
+                                    <%= settings.currencySymbol %><%= product.originalPrice.toFixed(2) %>
+                                </span>
+                            <% } else { %>
+                                <span style="color: var(--accent-color); font-weight: bold;">
+                                    <%= settings.currencySymbol %><%= product.price.toFixed(2) %>
+                                </span>
+                            <% } %>
+                        </div>
+                    </div>
+                    <% }) %>
+                    <% if (discountCode) { %>
+                    <p class="discount-info">Discount Applied: <%= discountCode %> (<%= discountPercentage %>% off)</p>
+                    <% } %>
+                    <% if (salesTaxAmount > 0) { %>
+                    <p class="discount-info">Sales Tax: <%= settings.currencySymbol %><%= salesTaxAmount.toFixed(2) %></p>
+                    <% } %>
+                    <div class="total-price">Total Paid: <%= settings.currencySymbol %><%= totalPrice.toFixed(2) %></div>
+                    <div class="payment-date"><%= payment.createdAt.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true,
+                        timeZoneName: 'short'
+                    }); %></div>
+                </div>
+
+                <a href="/profile/<%= user.id %>" class="button button-accent">Go to Products</a>
+                <a href="/" class="button button-back">Back to Home</a>
+            </div>
+        </div>
+    </section>
+
+    <%- include('partials/footer') %>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const canvas = document.getElementById("fireworks");
+            const ctx = canvas.getContext("2d");
+    
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener("resize", resizeCanvas);
+            resizeCanvas();
+    
+            class FireworkParticle {
+            constructor(x, y, hue) {
+                this.x = x;
+                this.y = y;
+                this.hue = hue;
+                this.radius = Math.random() * 3 + 1; // Particle size
+                this.alpha = 1;
+                this.speedX = Math.random() * 4 - 2; // Slower horizontal velocity
+                this.speedY = Math.random() * 4 - 2; // Slower vertical velocity
+                this.decay = Math.random() * 0.01 + 0.005; // Slower fade rate
+            }
+    
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.alpha -= this.decay;
+                }
+    
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `hsl(${this.hue}, 100%, 70%)`;
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+    
+            class Firework {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.particles = [];
+                    this.hue = Math.random() * 360; // Random color hue
+    
+                    for (let i = 0; i < 100; i++) { // Increase particle count
+                        this.particles.push(new FireworkParticle(this.x, this.y, this.hue));
+                    }
+                }
+    
+                update() {
+                    this.particles.forEach((particle, index) => {
+                        particle.update();
+                        if (particle.alpha <= 0) this.particles.splice(index, 1);
+                    });
+                }
+    
+                draw() {
+                    this.particles.forEach((particle) => particle.draw());
+                }
+    
+                isFinished() {
+                    return this.particles.length === 0;
+                }
+            }
+    
+            const fireworks = [];
+    
+            function launchFirework() {
+                // Launch multiple fireworks simultaneously
+                for (let i = 0; i < 3; i++) { // Increase simultaneous firework count
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height * 0.5; // Launch near the top half
+                    fireworks.push(new Firework(x, y));
+                }
+            }
+    
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+                fireworks.forEach((firework, index) => {
+                    firework.update();
+                    firework.draw();
+                    if (firework.isFinished()) fireworks.splice(index, 1);
+                });
+    
+                requestAnimationFrame(animate);
+            }
+    
+            // Start fireworks
+            setInterval(launchFirework, 500);
+            animate();
+        });
+    </script>
+    
+</body>
+</html>
